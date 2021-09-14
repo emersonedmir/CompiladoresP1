@@ -83,7 +83,7 @@ public final class Scanner {
     }
   }
 
-  private int scanToken() {
+    private int scanToken() {
 
     switch (currentChar) {
 
