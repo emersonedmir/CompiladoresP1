@@ -101,6 +101,7 @@ public class Compiler {
         if (successful) {
             encoder.saveObjectProgram(objectName);
             System.out.println("Compilation was successful.");
+            /*Generar archivo HTML*/
         } else {
             System.out.println("Compilation was unsuccessful.");
         }

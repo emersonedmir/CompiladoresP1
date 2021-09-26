@@ -113,9 +113,19 @@ public class TableVisitor implements Visitor {
   }
   
   public Object visitIfCommand(IfCommand ast, Object o) { 
-      ast.E.visit(this, null);
-      ast.C1.visit(this, null);
-      ast.C2.visit(this, null);
+      
+      if(ast.E2==null){
+          ast.E1.visit(this, null);
+          ast.C1.visit(this, null);
+          ast.C2.visit(this, null);
+      }
+      else{
+          ast.E1.visit(this, null);
+          ast.E2.visit(this, null);
+          ast.C1.visit(this, null);
+          ast.C2.visit(this, null);
+      }
+      
       
       return(null);
   }

@@ -21,7 +21,15 @@ public class IfCommand extends Command {
   public IfCommand (Expression eAST, Command c1AST, Command c2AST,
                     SourcePosition thePosition) {
     super (thePosition);
-    E = eAST;
+    E1 = eAST;
+    C1 = c1AST;
+    C2 = c2AST;
+  }
+  
+   public IfCommand (Expression e1AST,Expression e2AST,Command c1AST, Command c2AST, SourcePosition thePosition) {
+    super (thePosition);
+    E1 = e1AST;
+    E2 = e2AST;
     C1 = c1AST;
     C2 = c2AST;
   }
@@ -30,6 +38,6 @@ public class IfCommand extends Command {
     return v.visitIfCommand(this, o);
   }
 
-  public Expression E;
+  public Expression E1, E2;
   public Command C1, C2;
 }

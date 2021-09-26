@@ -14,6 +14,8 @@
 
 package Triangle.SyntacticAnalyzer;
 
+import java.util.ArrayList;
+
 
 public final class Scanner {
 
@@ -23,6 +25,9 @@ public final class Scanner {
   private char currentChar;
   private StringBuffer currentSpelling;
   private boolean currentlyScanningToken;
+  
+  /*Modificacion creamos lista para almacenar los tokens en un lista para su impresion HTML*/
+  public ArrayList<Token> lstTokens = new ArrayList<Token>();
 
   private boolean isLetter(char c) {
     return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z');
@@ -130,7 +135,12 @@ public final class Scanner {
 
     case '.':
       takeIt();
+      if (currentChar == '.'){
+          takeIt();
+          return Token.DDOT;
+      }else
       return Token.DOT;
+      
 
     case ':':
       takeIt();
@@ -151,7 +161,11 @@ public final class Scanner {
     case '~':
       takeIt();
       return Token.IS;
-
+      
+    case '|':
+      takeIt();
+      return Token.HLINE;
+      
     case '(':
       takeIt();
       return Token.LPAREN;
@@ -207,7 +221,8 @@ public final class Scanner {
 
     pos.finish = sourceFile.getCurrentLine();
     tok = new Token(kind, currentSpelling.toString(), pos);
-    if (debug)
+    /*Almacenamos los tokens*/
+    lstTokens.add(tok);
       System.out.println(tok);
     return tok;
   }

@@ -106,8 +106,16 @@ public class LayoutVisitor implements Visitor {
   }
 
   public Object visitIfCommand(IfCommand ast, Object obj) {
-    return layoutTernary("IfCom.", ast.E, ast.C1, ast.C2);
+      if(ast.E2==null){
+          return layoutQuaternary("IfCom.", ast.E1,ast.E2,ast.C1, ast.C2);
+      }
+      else
+      {
+          return layoutTernary("IfCom.", ast.E1, ast.C1, ast.C2);
+      }
+    
   }
+
 
   public Object visitLetCommand(LetCommand ast, Object obj) {
     return layoutBinary("LetCom.", ast.D, ast.C);
@@ -143,8 +151,9 @@ public class LayoutVisitor implements Visitor {
     return layoutNullary("EmptyExpr.");
   }
 
-  public Object visitIfExpression(IfExpression ast, Object obj) {
+  public Object visitIfExpression(IfExpression ast, Object obj) {    
     return layoutTernary("IfExpr.", ast.E1, ast.E2, ast.E3);
+
   }
 
   public Object visitIntegerExpression(IntegerExpression ast, Object obj) {

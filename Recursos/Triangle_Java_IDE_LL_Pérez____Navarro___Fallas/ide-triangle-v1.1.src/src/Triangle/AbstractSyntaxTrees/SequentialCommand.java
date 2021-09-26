@@ -23,6 +23,8 @@ public class SequentialCommand extends Command {
     C1 = c1AST;
     C2 = c2AST;
   }
+  
+ 
 
   public Object visit(Visitor v, Object o) {
     return v.visitSequentialCommand(this, o);

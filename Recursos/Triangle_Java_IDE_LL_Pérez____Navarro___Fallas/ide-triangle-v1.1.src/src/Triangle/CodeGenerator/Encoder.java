@@ -117,9 +117,17 @@ public final class Encoder implements Visitor {
     Frame frame = (Frame) o;
     int jumpifAddr, jumpAddr;
 
-    Integer valSize = (Integer) ast.E.visit(this, frame);
+    Integer valSize = (Integer) ast.E1.visit(this, frame);
     jumpifAddr = nextInstrAddr;
     emit(Machine.JUMPIFop, Machine.falseRep, Machine.CBr, 0);
+    
+    
+    Integer valSize2 = (Integer) ast.E2.visit(this, frame);
+    jumpifAddr = nextInstrAddr;
+    emit(Machine.JUMPIFop, Machine.falseRep, Machine.CBr, 0);
+    patch(jumpifAddr, nextInstrAddr);
+    
+    
     ast.C1.visit(this, frame);
     jumpAddr = nextInstrAddr;
     emit(Machine.JUMPop, 0, Machine.CBr, 0);
