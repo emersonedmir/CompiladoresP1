@@ -20,12 +20,14 @@ import Triangle.AbstractSyntaxTrees.CharacterLiteral;
 import Triangle.AbstractSyntaxTrees.ConstActualParameter;
 import Triangle.AbstractSyntaxTrees.ConstDeclaration;
 import Triangle.AbstractSyntaxTrees.ConstFormalParameter;
+import Triangle.AbstractSyntaxTrees.DoCommand;
 import Triangle.AbstractSyntaxTrees.DotVname;
 import Triangle.AbstractSyntaxTrees.EmptyActualParameterSequence;
 import Triangle.AbstractSyntaxTrees.EmptyCommand;
 import Triangle.AbstractSyntaxTrees.EmptyExpression;
 import Triangle.AbstractSyntaxTrees.EmptyFormalParameterSequence;
 import Triangle.AbstractSyntaxTrees.ErrorTypeDenoter;
+import Triangle.AbstractSyntaxTrees.ForCommand;
 import Triangle.AbstractSyntaxTrees.FuncActualParameter;
 import Triangle.AbstractSyntaxTrees.FuncDeclaration;
 import Triangle.AbstractSyntaxTrees.FuncFormalParameter;
@@ -46,9 +48,11 @@ import Triangle.AbstractSyntaxTrees.Operator;
 import Triangle.AbstractSyntaxTrees.ProcActualParameter;
 import Triangle.AbstractSyntaxTrees.ProcDeclaration;
 import Triangle.AbstractSyntaxTrees.ProcFormalParameter;
+import Triangle.AbstractSyntaxTrees.ProcFuncs;
 import Triangle.AbstractSyntaxTrees.Program;
 import Triangle.AbstractSyntaxTrees.RecordExpression;
 import Triangle.AbstractSyntaxTrees.RecordTypeDenoter;
+import Triangle.AbstractSyntaxTrees.RecursiveDeclaration;
 import Triangle.AbstractSyntaxTrees.SequentialCommand;
 import Triangle.AbstractSyntaxTrees.SequentialDeclaration;
 import Triangle.AbstractSyntaxTrees.SimpleTypeDenoter;
@@ -62,8 +66,10 @@ import Triangle.AbstractSyntaxTrees.SubscriptVname;
 import Triangle.AbstractSyntaxTrees.TypeDeclaration;
 import Triangle.AbstractSyntaxTrees.UnaryExpression;
 import Triangle.AbstractSyntaxTrees.UnaryOperatorDeclaration;
+import Triangle.AbstractSyntaxTrees.UntilCommand;
 import Triangle.AbstractSyntaxTrees.VarActualParameter;
 import Triangle.AbstractSyntaxTrees.VarDeclaration;
+import Triangle.AbstractSyntaxTrees.VarDeclarationTD;
 import Triangle.AbstractSyntaxTrees.VarFormalParameter;
 import Triangle.AbstractSyntaxTrees.Visitor;
 import Triangle.AbstractSyntaxTrees.VnameExpression;
@@ -114,17 +120,11 @@ public class TableVisitor implements Visitor {
   
   public Object visitIfCommand(IfCommand ast, Object o) { 
       
-      if(ast.E2==null){
-          ast.E1.visit(this, null);
+
+          ast.E.visit(this, null);
           ast.C1.visit(this, null);
           ast.C2.visit(this, null);
-      }
-      else{
-          ast.E1.visit(this, null);
-          ast.E2.visit(this, null);
-          ast.C1.visit(this, null);
-          ast.C2.visit(this, null);
-      }
+      
       
       
       return(null);
@@ -632,4 +632,67 @@ public class TableVisitor implements Visitor {
   // <editor-fold defaultstate="collapsed" desc=" Attributes ">
     private DefaultTableModel model;
     // </editor-fold>
+
+    @Override
+    public Object visitVarDeclarationTD(VarDeclarationTD ast, Object o) {
+        try {
+      addIdentifier(ast.I.spelling, 
+              "KnownAddress", 
+              (ast.entity!=null?ast.entity.size:0), 
+              ((KnownAddress)ast.entity).address.level, 
+              ((KnownAddress)ast.entity).address.displacement, 
+              -1);
+      } catch (NullPointerException e) { }
+      
+      ast.E.visit(this, null);
+      return(null);
+    }
+
+    @Override
+    public Object visitDoCommand(DoCommand ast, Object o) {
+        ast.E.visit(this, null);
+        ast.C.visit(this, null);
+      
+      return(null);
+    }
+
+    @Override
+    public Object visitForCommand(ForCommand ast, Object o) {
+        try {
+      addIdentifier(ast.I.spelling, 
+              "Field", 
+              (ast.entity!=null?ast.entity.size:0),
+              -1, ((Field)ast.entity).fieldOffset, -1);      
+    } catch (NullPointerException e) { }
+      ast.C.visit(this, null);
+      ast.I.visit(this, null);
+      ast.E.visit(this, null);
+
+
+      return(null);
+    }
+
+    @Override
+    public Object visitProcFuncs(ProcFuncs ast, Object o) {
+        ast.pfAST.visit(this, null);
+        ast.pf2AST.visit(this, null);
+      
+        return(null);
+    }
+
+    @Override
+    public Object visitRecursiveDeclaration(RecursiveDeclaration ast, Object o) {
+        ast.D.visit(this,null);
+        return(null);
+    }
+
+    @Override
+    public Object visitUntilCommand(UntilCommand ast, Object o) {
+        ast.E.visit(this, null);
+        ast.C.visit(this, null);
+      
+        return(null);
+    }
+
+    
 }

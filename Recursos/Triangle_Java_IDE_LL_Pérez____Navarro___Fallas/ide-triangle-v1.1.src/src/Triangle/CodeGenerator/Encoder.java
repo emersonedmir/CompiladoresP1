@@ -40,12 +40,14 @@ import Triangle.AbstractSyntaxTrees.ConstActualParameter;
 import Triangle.AbstractSyntaxTrees.ConstDeclaration;
 import Triangle.AbstractSyntaxTrees.ConstFormalParameter;
 import Triangle.AbstractSyntaxTrees.Declaration;
+import Triangle.AbstractSyntaxTrees.DoCommand;
 import Triangle.AbstractSyntaxTrees.DotVname;
 import Triangle.AbstractSyntaxTrees.EmptyActualParameterSequence;
 import Triangle.AbstractSyntaxTrees.EmptyCommand;
 import Triangle.AbstractSyntaxTrees.EmptyExpression;
 import Triangle.AbstractSyntaxTrees.EmptyFormalParameterSequence;
 import Triangle.AbstractSyntaxTrees.ErrorTypeDenoter;
+import Triangle.AbstractSyntaxTrees.ForCommand;
 import Triangle.AbstractSyntaxTrees.FuncActualParameter;
 import Triangle.AbstractSyntaxTrees.FuncDeclaration;
 import Triangle.AbstractSyntaxTrees.FuncFormalParameter;
@@ -66,9 +68,11 @@ import Triangle.AbstractSyntaxTrees.Operator;
 import Triangle.AbstractSyntaxTrees.ProcActualParameter;
 import Triangle.AbstractSyntaxTrees.ProcDeclaration;
 import Triangle.AbstractSyntaxTrees.ProcFormalParameter;
+import Triangle.AbstractSyntaxTrees.ProcFuncs;
 import Triangle.AbstractSyntaxTrees.Program;
 import Triangle.AbstractSyntaxTrees.RecordExpression;
 import Triangle.AbstractSyntaxTrees.RecordTypeDenoter;
+import Triangle.AbstractSyntaxTrees.RecursiveDeclaration;
 import Triangle.AbstractSyntaxTrees.SequentialCommand;
 import Triangle.AbstractSyntaxTrees.SequentialDeclaration;
 import Triangle.AbstractSyntaxTrees.SimpleTypeDenoter;
@@ -82,8 +86,10 @@ import Triangle.AbstractSyntaxTrees.SubscriptVname;
 import Triangle.AbstractSyntaxTrees.TypeDeclaration;
 import Triangle.AbstractSyntaxTrees.UnaryExpression;
 import Triangle.AbstractSyntaxTrees.UnaryOperatorDeclaration;
+import Triangle.AbstractSyntaxTrees.UntilCommand;
 import Triangle.AbstractSyntaxTrees.VarActualParameter;
 import Triangle.AbstractSyntaxTrees.VarDeclaration;
+import Triangle.AbstractSyntaxTrees.VarDeclarationTD;
 import Triangle.AbstractSyntaxTrees.VarFormalParameter;
 import Triangle.AbstractSyntaxTrees.Visitor;
 import Triangle.AbstractSyntaxTrees.Vname;
@@ -117,17 +123,9 @@ public final class Encoder implements Visitor {
     Frame frame = (Frame) o;
     int jumpifAddr, jumpAddr;
 
-    Integer valSize = (Integer) ast.E1.visit(this, frame);
+    Integer valSize = (Integer) ast.E.visit(this, frame);
     jumpifAddr = nextInstrAddr;
     emit(Machine.JUMPIFop, Machine.falseRep, Machine.CBr, 0);
-    
-    
-    Integer valSize2 = (Integer) ast.E2.visit(this, frame);
-    jumpifAddr = nextInstrAddr;
-    emit(Machine.JUMPIFop, Machine.falseRep, Machine.CBr, 0);
-    patch(jumpifAddr, nextInstrAddr);
-    
-    
     ast.C1.visit(this, frame);
     jumpAddr = nextInstrAddr;
     emit(Machine.JUMPop, 0, Machine.CBr, 0);
@@ -1003,4 +1001,76 @@ public final class Encoder implements Visitor {
       }
     }
   }
+
+    @Override
+    public Object visitVarDeclarationTD(VarDeclarationTD ast, Object o) {
+        Frame frame = (Frame) o;
+        int extraSize;
+
+        extraSize = ((Integer) ast.E.visit(this, null)).intValue();
+        emit(Machine.PUSHop, 0, 0, extraSize);
+        ast.entity = new KnownAddress(Machine.addressSize, frame.level, frame.size);
+        writeTableDetails(ast);
+        return new Integer(extraSize);
+    }
+
+    @Override
+    public Object visitDoCommand(DoCommand ast, Object o) {
+        Frame frame = (Frame) o;
+        int extraSize = ((Integer) ast.E.visit(this, frame)).intValue();
+        ast.C.visit(this, new Frame(frame, extraSize));
+        if (extraSize > 0)
+          emit(Machine.POPop, 0, 0, extraSize);
+        return null;
+    }
+
+    @Override
+    public Object visitForCommand(ForCommand ast, Object o) {
+        int offset = ((Integer) o).intValue();
+        int fieldSize;
+
+        if (ast.entity == null) {
+          fieldSize = ((Integer) ast.E.visit(this, null)).intValue();
+          ast.entity = new Field (fieldSize, offset);
+          writeTableDetails(ast);
+        } else
+          fieldSize = ast.entity.size;
+
+        Integer offset1 = new Integer(offset + fieldSize);
+        int recSize = ((Integer) ast.C.visit(this, offset1)).intValue();
+        return new Integer(fieldSize + recSize);
+    }
+
+    @Override
+    public Object visitProcFuncs(ProcFuncs ast, Object o) {
+        Frame frame = (Frame) o;
+        int extraSize1, extraSize2;
+
+        extraSize1 = ((Integer) ast.pfAST.visit(this, frame)).intValue();
+        Frame frame1 = new Frame (frame, extraSize1);
+        extraSize2 = ((Integer) ast.pf2AST.visit(this, frame1)).intValue();
+        return new Integer(extraSize1 + extraSize2);
+    }
+
+    @Override
+    public Object visitRecursiveDeclaration(RecursiveDeclaration ast, Object o) {
+        return ast.D.visit(this, o);
+    }
+
+    @Override
+    public Object visitUntilCommand(UntilCommand ast, Object o) {
+        Frame frame = (Frame) o;
+        int jumpAddr, loopAddr;
+
+        jumpAddr = nextInstrAddr;
+        emit(Machine.JUMPop, 0, Machine.CBr, 0);
+        loopAddr = nextInstrAddr;
+        ast.C.visit(this, frame);
+        patch(jumpAddr, nextInstrAddr);
+        ast.E.visit(this, frame);
+        emit(Machine.JUMPIFop, Machine.trueRep, Machine.CBr, loopAddr);
+        return null;
+    }
+
+    
 }
