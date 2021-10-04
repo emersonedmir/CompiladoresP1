@@ -28,8 +28,14 @@ public interface Visitor {
   public abstract Object visitProcFuncs(ProcFuncs ast, Object o);
   public abstract Object visitRecursiveDeclaration(RecursiveDeclaration ast, Object o);
   public abstract Object visitUntilCommand(UntilCommand ast, Object o);
-
-
+  public abstract Object visitRangeVarDecl(RangeVarDecl ast, Object o);
+  public abstract Object visitRepeatForRange(RepeatForRange ast, Object o);
+  public abstract Object visitRepeatForRangeWhile(RepeatForRangeWhile ast, Object o); 
+  public abstract Object visitRepeatForRangeUntil(RepeatForRangeUntil ast, Object o);//Nuevo método visit para RepeatForRangeUntil
+  public abstract Object visitInVarDecl(InVarDecl ast, Object o);//Nuevo método visit para InVarDecl
+  public abstract Object visitRepeatIn(RepeatIn ast, Object o); //Nuevo metodo visit para RepeatIn
+  public abstract Object visitLocalDeclaration(LocalDeclaration ast, Object o); //Nuevo metodo visit para LocalDeclaration
+  public abstract Object visitVarExpression(VarExpression ast,Object o); //Nuevo método visit para VarExpression
   // Expressions
   public abstract Object visitArrayExpression(ArrayExpression ast, Object o);
   public abstract Object visitBinaryExpression(BinaryExpression ast, Object o);
@@ -52,9 +58,9 @@ public interface Visitor {
   public abstract Object visitTypeDeclaration(TypeDeclaration ast, Object o);
   public abstract Object visitUnaryOperatorDeclaration(UnaryOperatorDeclaration ast, Object o);
   public abstract Object visitVarDeclaration(VarDeclaration ast, Object o);
-  public abstract Object visitVarDeclarationTD(VarDeclarationTD ast, Object o);
+
  
-  public abstract Object visitForCommand(ForCommand ast, Object o);
+
 
   // Array Aggregates
   public abstract Object visitMultipleArrayAggregate(MultipleArrayAggregate ast, Object o);

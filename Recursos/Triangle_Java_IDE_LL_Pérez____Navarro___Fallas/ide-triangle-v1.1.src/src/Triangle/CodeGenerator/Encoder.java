@@ -47,18 +47,19 @@ import Triangle.AbstractSyntaxTrees.EmptyCommand;
 import Triangle.AbstractSyntaxTrees.EmptyExpression;
 import Triangle.AbstractSyntaxTrees.EmptyFormalParameterSequence;
 import Triangle.AbstractSyntaxTrees.ErrorTypeDenoter;
-import Triangle.AbstractSyntaxTrees.ForCommand;
 import Triangle.AbstractSyntaxTrees.FuncActualParameter;
 import Triangle.AbstractSyntaxTrees.FuncDeclaration;
 import Triangle.AbstractSyntaxTrees.FuncFormalParameter;
 import Triangle.AbstractSyntaxTrees.Identifier;
 import Triangle.AbstractSyntaxTrees.IfCommand;
 import Triangle.AbstractSyntaxTrees.IfExpression;
+import Triangle.AbstractSyntaxTrees.InVarDecl;
 import Triangle.AbstractSyntaxTrees.IntTypeDenoter;
 import Triangle.AbstractSyntaxTrees.IntegerExpression;
 import Triangle.AbstractSyntaxTrees.IntegerLiteral;
 import Triangle.AbstractSyntaxTrees.LetCommand;
 import Triangle.AbstractSyntaxTrees.LetExpression;
+import Triangle.AbstractSyntaxTrees.LocalDeclaration;
 import Triangle.AbstractSyntaxTrees.MultipleActualParameterSequence;
 import Triangle.AbstractSyntaxTrees.MultipleArrayAggregate;
 import Triangle.AbstractSyntaxTrees.MultipleFieldTypeDenoter;
@@ -70,9 +71,14 @@ import Triangle.AbstractSyntaxTrees.ProcDeclaration;
 import Triangle.AbstractSyntaxTrees.ProcFormalParameter;
 import Triangle.AbstractSyntaxTrees.ProcFuncs;
 import Triangle.AbstractSyntaxTrees.Program;
+import Triangle.AbstractSyntaxTrees.RangeVarDecl;
 import Triangle.AbstractSyntaxTrees.RecordExpression;
 import Triangle.AbstractSyntaxTrees.RecordTypeDenoter;
 import Triangle.AbstractSyntaxTrees.RecursiveDeclaration;
+import Triangle.AbstractSyntaxTrees.RepeatForRange;
+import Triangle.AbstractSyntaxTrees.RepeatForRangeUntil;
+import Triangle.AbstractSyntaxTrees.RepeatForRangeWhile;
+import Triangle.AbstractSyntaxTrees.RepeatIn;
 import Triangle.AbstractSyntaxTrees.SequentialCommand;
 import Triangle.AbstractSyntaxTrees.SequentialDeclaration;
 import Triangle.AbstractSyntaxTrees.SimpleTypeDenoter;
@@ -89,7 +95,7 @@ import Triangle.AbstractSyntaxTrees.UnaryOperatorDeclaration;
 import Triangle.AbstractSyntaxTrees.UntilCommand;
 import Triangle.AbstractSyntaxTrees.VarActualParameter;
 import Triangle.AbstractSyntaxTrees.VarDeclaration;
-import Triangle.AbstractSyntaxTrees.VarDeclarationTD;
+import Triangle.AbstractSyntaxTrees.VarExpression;
 import Triangle.AbstractSyntaxTrees.VarFormalParameter;
 import Triangle.AbstractSyntaxTrees.Visitor;
 import Triangle.AbstractSyntaxTrees.Vname;
@@ -1003,74 +1009,64 @@ public final class Encoder implements Visitor {
   }
 
     @Override
-    public Object visitVarDeclarationTD(VarDeclarationTD ast, Object o) {
-        Frame frame = (Frame) o;
-        int extraSize;
-
-        extraSize = ((Integer) ast.E.visit(this, null)).intValue();
-        emit(Machine.PUSHop, 0, 0, extraSize);
-        ast.entity = new KnownAddress(Machine.addressSize, frame.level, frame.size);
-        writeTableDetails(ast);
-        return new Integer(extraSize);
-    }
-
-    @Override
     public Object visitDoCommand(DoCommand ast, Object o) {
-        Frame frame = (Frame) o;
-        int extraSize = ((Integer) ast.E.visit(this, frame)).intValue();
-        ast.C.visit(this, new Frame(frame, extraSize));
-        if (extraSize > 0)
-          emit(Machine.POPop, 0, 0, extraSize);
-        return null;
-    }
-
-    @Override
-    public Object visitForCommand(ForCommand ast, Object o) {
-        int offset = ((Integer) o).intValue();
-        int fieldSize;
-
-        if (ast.entity == null) {
-          fieldSize = ((Integer) ast.E.visit(this, null)).intValue();
-          ast.entity = new Field (fieldSize, offset);
-          writeTableDetails(ast);
-        } else
-          fieldSize = ast.entity.size;
-
-        Integer offset1 = new Integer(offset + fieldSize);
-        int recSize = ((Integer) ast.C.visit(this, offset1)).intValue();
-        return new Integer(fieldSize + recSize);
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public Object visitProcFuncs(ProcFuncs ast, Object o) {
-        Frame frame = (Frame) o;
-        int extraSize1, extraSize2;
-
-        extraSize1 = ((Integer) ast.pfAST.visit(this, frame)).intValue();
-        Frame frame1 = new Frame (frame, extraSize1);
-        extraSize2 = ((Integer) ast.pf2AST.visit(this, frame1)).intValue();
-        return new Integer(extraSize1 + extraSize2);
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public Object visitRecursiveDeclaration(RecursiveDeclaration ast, Object o) {
-        return ast.D.visit(this, o);
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public Object visitUntilCommand(UntilCommand ast, Object o) {
-        Frame frame = (Frame) o;
-        int jumpAddr, loopAddr;
-
-        jumpAddr = nextInstrAddr;
-        emit(Machine.JUMPop, 0, Machine.CBr, 0);
-        loopAddr = nextInstrAddr;
-        ast.C.visit(this, frame);
-        patch(jumpAddr, nextInstrAddr);
-        ast.E.visit(this, frame);
-        emit(Machine.JUMPIFop, Machine.trueRep, Machine.CBr, loopAddr);
-        return null;
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    
+    @Override
+    public Object visitRangeVarDecl(RangeVarDecl ast, Object o) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitRepeatForRange(RepeatForRange ast, Object o) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+
+
+    @Override
+    public Object visitRepeatForRangeWhile(RepeatForRangeWhile rfrw, Object o) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitRepeatForRangeUntil(RepeatForRangeUntil rfru, Object o) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitInVarDecl(InVarDecl ast, Object o) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitRepeatIn(RepeatIn ast, Object o) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitLocalDeclaration(LocalDeclaration ast, Object o) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitVarExpression(VarExpression ast, Object o) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }

@@ -11,21 +11,17 @@ import Triangle.SyntacticAnalyzer.SourcePosition;
  *
  * @author TOES
  */
-public class ForCommand extends Command{
+public class LocalDeclaration extends Declaration{
 
-    public ForCommand(Identifier iAST,Expression eAST, Command cAST, SourcePosition thePosition) {
+    public LocalDeclaration(Declaration d1AST, Declaration d2AST,SourcePosition thePosition) {
         super(thePosition);
-        I=iAST;
-        E=eAST;
-        C=cAST;
+        D1 = d1AST;
+        D2 = d2AST;
     }
 
     @Override
     public Object visit(Visitor v, Object o) {
-       return v.visitForCommand(this, o);
+        return v.visitLocalDeclaration(this, o);
     }
-    
-    public Identifier I;
-    public Expression E;
-    public Command C;
+    public Declaration D1, D2;
 }

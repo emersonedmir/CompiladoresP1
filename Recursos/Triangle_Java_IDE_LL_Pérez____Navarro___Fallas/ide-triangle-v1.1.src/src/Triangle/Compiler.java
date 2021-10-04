@@ -21,6 +21,11 @@ import Triangle.SyntacticAnalyzer.Parser;
 import Triangle.SyntacticAnalyzer.Scanner;
 import Triangle.SyntacticAnalyzer.SourceFile;
 import Triangle.TreeDrawer.Drawer;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+
 
 /**
  * The main driver class for the Triangle compiler.
@@ -59,7 +64,7 @@ public class Compiler {
      *          otherwise false.
      */
     static boolean compileProgram (String sourceName, String objectName,
-                                   boolean showingAST, boolean showingTable) {
+                                   boolean showingAST, boolean showingTable) throws IOException {
 
         System.out.println("********** " +
                            "Triangle Compiler (Java Version 2.1)" +
@@ -105,6 +110,7 @@ public class Compiler {
         } else {
             System.out.println("Compilation was unsuccessful.");
         }
+    
         return successful;
     }
 
@@ -114,7 +120,7 @@ public class Compiler {
      * @param	args	the only command-line argument to the program specifies
      *                  the source filename.
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         boolean compiledOK;
 
         if (args.length != 1) {

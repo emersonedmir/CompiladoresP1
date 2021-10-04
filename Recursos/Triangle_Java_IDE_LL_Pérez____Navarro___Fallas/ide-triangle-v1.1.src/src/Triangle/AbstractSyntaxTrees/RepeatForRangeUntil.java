@@ -23,7 +23,7 @@ public class RepeatForRangeUntil extends Command{
 
     @Override
     public Object visit(Visitor v, Object o) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return v.visitRepeatForRangeUntil(this, o);
     }
     public RangeVarDecl D;
     public Expression E1;

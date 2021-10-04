@@ -13,6 +13,10 @@ import Triangle.AbstractSyntaxTrees.Program;
 import Triangle.SyntacticAnalyzer.Parser;
 import Triangle.ContextualAnalyzer.Checker;
 import Triangle.CodeGenerator.Encoder;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 
 
 
@@ -39,7 +43,7 @@ public class IDECompiler {
      * @param sourceName Path to the source file.
      * @return True if compilation was succesful.
      */
-    public boolean compileProgram(String sourceName) {
+    public boolean compileProgram(String sourceName) throws IOException {
         System.out.println("********** " +
                            "Triangle Compiler (IDE-Triangle 1.0)" +
                            " **********");
@@ -52,6 +56,21 @@ public class IDECompiler {
         boolean success = false;
         
         rootAST = parser.parseProgram();
+        
+        scanner.html +="</p>";
+        String ruta = sourceName + ".html";
+        String contenido = scanner.html;
+        File file = new File(ruta);
+        if (!file.exists()) {
+                file.createNewFile();
+            }
+        FileWriter fw = new FileWriter(file);
+            BufferedWriter bw = new BufferedWriter(fw);
+            bw.write(contenido);
+            bw.close();
+        
+        
+        
         if (report.numErrors == 0) {
             //System.out.println("Contextual Analysis ...");
             //Checker checker = new Checker(report);
@@ -72,6 +91,8 @@ public class IDECompiler {
             System.out.println("Compilation was successful.");
         else
             System.out.println("Compilation was unsuccessful.");
+        
+        
         
         return(success);
     }

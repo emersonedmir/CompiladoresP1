@@ -11,19 +11,18 @@ import Triangle.SyntacticAnalyzer.SourcePosition;
  *
  * @author TOES
  */
-public class VarDeclarationTD extends Declaration{
+public class VarExpression extends Declaration{
 
-    public VarDeclarationTD(Identifier iAST, Expression eAST,
-                          SourcePosition thePosition) {
+    public VarExpression(Identifier iAST,Expression eAST,SourcePosition thePosition) {
         super(thePosition);
-        I = iAST;
-        E = eAST;
+        I=iAST;
+        E=eAST;
     }
 
     @Override
     public Object visit(Visitor v, Object o) {
-        return v.visitVarDeclarationTD(this, o);
+        return v.visitVarExpression(this, o);
     }
-        public Identifier I;
-        public Expression E;
+ public Identifier I;
+ public Expression E;
 }

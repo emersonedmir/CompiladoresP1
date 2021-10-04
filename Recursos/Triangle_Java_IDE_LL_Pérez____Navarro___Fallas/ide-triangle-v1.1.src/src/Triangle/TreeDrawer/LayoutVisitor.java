@@ -39,18 +39,19 @@ import Triangle.AbstractSyntaxTrees.EmptyCommand;
 import Triangle.AbstractSyntaxTrees.EmptyExpression;
 import Triangle.AbstractSyntaxTrees.EmptyFormalParameterSequence;
 import Triangle.AbstractSyntaxTrees.ErrorTypeDenoter;
-import Triangle.AbstractSyntaxTrees.ForCommand;
 import Triangle.AbstractSyntaxTrees.FuncActualParameter;
 import Triangle.AbstractSyntaxTrees.FuncDeclaration;
 import Triangle.AbstractSyntaxTrees.FuncFormalParameter;
 import Triangle.AbstractSyntaxTrees.Identifier;
 import Triangle.AbstractSyntaxTrees.IfCommand;
 import Triangle.AbstractSyntaxTrees.IfExpression;
+import Triangle.AbstractSyntaxTrees.InVarDecl;
 import Triangle.AbstractSyntaxTrees.IntTypeDenoter;
 import Triangle.AbstractSyntaxTrees.IntegerExpression;
 import Triangle.AbstractSyntaxTrees.IntegerLiteral;
 import Triangle.AbstractSyntaxTrees.LetCommand;
 import Triangle.AbstractSyntaxTrees.LetExpression;
+import Triangle.AbstractSyntaxTrees.LocalDeclaration;
 import Triangle.AbstractSyntaxTrees.MultipleActualParameterSequence;
 import Triangle.AbstractSyntaxTrees.MultipleArrayAggregate;
 import Triangle.AbstractSyntaxTrees.MultipleFieldTypeDenoter;
@@ -62,9 +63,14 @@ import Triangle.AbstractSyntaxTrees.ProcDeclaration;
 import Triangle.AbstractSyntaxTrees.ProcFormalParameter;
 import Triangle.AbstractSyntaxTrees.ProcFuncs;
 import Triangle.AbstractSyntaxTrees.Program;
+import Triangle.AbstractSyntaxTrees.RangeVarDecl;
 import Triangle.AbstractSyntaxTrees.RecordExpression;
 import Triangle.AbstractSyntaxTrees.RecordTypeDenoter;
 import Triangle.AbstractSyntaxTrees.RecursiveDeclaration;
+import Triangle.AbstractSyntaxTrees.RepeatForRange;
+import Triangle.AbstractSyntaxTrees.RepeatForRangeUntil;
+import Triangle.AbstractSyntaxTrees.RepeatForRangeWhile;
+import Triangle.AbstractSyntaxTrees.RepeatIn;
 import Triangle.AbstractSyntaxTrees.SequentialCommand;
 import Triangle.AbstractSyntaxTrees.SequentialDeclaration;
 import Triangle.AbstractSyntaxTrees.SimpleTypeDenoter;
@@ -81,7 +87,7 @@ import Triangle.AbstractSyntaxTrees.UnaryOperatorDeclaration;
 import Triangle.AbstractSyntaxTrees.UntilCommand;
 import Triangle.AbstractSyntaxTrees.VarActualParameter;
 import Triangle.AbstractSyntaxTrees.VarDeclaration;
-import Triangle.AbstractSyntaxTrees.VarDeclarationTD;
+import Triangle.AbstractSyntaxTrees.VarExpression;
 import Triangle.AbstractSyntaxTrees.VarFormalParameter;
 import Triangle.AbstractSyntaxTrees.Visitor;
 import Triangle.AbstractSyntaxTrees.VnameExpression;
@@ -211,10 +217,6 @@ public class LayoutVisitor implements Visitor {
     return layoutBinary("VarDecl.", ast.I, ast.T);
   }
   
-  public Object visitVarDeclarationTD(VarDeclarationTD ast, Object obj) {
-    return layoutBinary("VarDecl.", ast.I, ast.E);
-  }
-
 
   // Array Aggregates
   public Object visitMultipleArrayAggregate(MultipleArrayAggregate ast, Object obj) {
@@ -562,10 +564,7 @@ public class LayoutVisitor implements Visitor {
         return layoutBinary("DoCom.", ast.E,ast.C);
     }
 
-    @Override
-    public Object visitForCommand(ForCommand ast, Object o) {
-        return layoutTernary("ForCom.", ast.I,ast.E, ast.C);
-    }
+
 
     @Override
     public Object visitProcFuncs(ProcFuncs ast, Object o) {
@@ -581,6 +580,48 @@ public class LayoutVisitor implements Visitor {
     public Object visitUntilCommand(UntilCommand ast, Object o) {
         return this.layoutBinary("Until Command", ast.E, ast.C);
     }
+
+    @Override
+    public Object visitRangeVarDecl(RangeVarDecl ast, Object o) {
+        return this.layoutBinary("Range Var Declaration instruction", ast.I, ast.E);
+    }
+
+    @Override
+    public Object visitRepeatForRange(RepeatForRange ast, Object o) {
+        return layoutTernary("ForRange.", ast.D,ast.E, ast.C);
+    }
+
+    @Override
+    public Object visitRepeatForRangeWhile(RepeatForRangeWhile ast, Object o) {
+        return this.layoutQuaternary("RepeatForRangeWhile", ast.D, ast.E1, ast.C, ast.E2);
+    }
+
+    @Override
+    public Object visitRepeatForRangeUntil(RepeatForRangeUntil ast, Object o) {
+        return this.layoutQuaternary("RepeatForRangeUntil", ast.D, ast.E1, ast.C, ast.E2);
+    }
+
+    @Override
+    public Object visitInVarDecl(InVarDecl ast, Object o) {
+       return this.layoutBinary("Range Var Declaration instruction", ast.I, ast.E);
+    }
+
+    @Override
+    public Object visitRepeatIn(RepeatIn ast, Object o) {
+        return this.layoutBinary("Range Var Declaration instruction", ast.IVD, ast.C);
+    }
+
+    @Override //implementacion de metodo visit, nuevo requerimiento
+    public Object visitLocalDeclaration(LocalDeclaration ast, Object o) {
+        return layoutBinary("LocalDeclaration.", ast.D1,ast.D2);
+    }
+
+    @Override
+    public Object visitVarExpression(VarExpression ast, Object o) {
+        return layoutBinary("LocalDeclaration.", ast.E,ast.I);
+    }
+
+   
 
     
 

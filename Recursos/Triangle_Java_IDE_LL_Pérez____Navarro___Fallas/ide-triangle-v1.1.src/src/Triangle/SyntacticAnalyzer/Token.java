@@ -167,7 +167,8 @@ final class Token extends Object {
     "<error>"
   };
 
-  private final static int	firstReservedWord = Token.ARRAY,
+  //se cambia ambito para poder acceder desde Scanner y poder darle estilo al html
+  public final static int	firstReservedWord = Token.ARRAY,
   				lastReservedWord  = Token.WHILE;
 
 }

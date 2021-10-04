@@ -25,6 +25,7 @@ public final class Scanner {
   private char currentChar;
   private StringBuffer currentSpelling;
   private boolean currentlyScanningToken;
+  public static String html = "<p style=\"font-family: 'DejaVu Sans', monospace;\">"; //inicio del formato HTML
   
   /*Modificacion creamos lista para almacenar los tokens en un lista para su impresion HTML*/
   public ArrayList<Token> lstTokens = new ArrayList<Token>();
@@ -74,16 +75,41 @@ public final class Scanner {
     switch (currentChar) {
     case '!':
       {
+          html += "<font color= '#00b300'>" + currentChar; //agregamos el estilo para los comentarios
         takeIt();
-        while ((currentChar != SourceFile.EOL) && (currentChar != SourceFile.EOT))
-          takeIt();
+        while ((currentChar != SourceFile.EOL) && (currentChar != SourceFile.EOT)){
+            html += currentChar; //Cargamos el comentario
+            takeIt();
+        }
+         html += "</font><br>"; //cerramos el estilo y agregamos salto de linea
         if (currentChar == SourceFile.EOL)
           takeIt();
       }
       break;
 
-    case ' ': case '\n': case '\r': case '\t':
-      takeIt();
+    case ' ': 
+    {
+        html += "<font style='padding-left:1em'>"; //agregamos un espacio
+        takeIt();
+    }
+    break;
+    case '\n': 
+    {
+        html += "<br>"; //insertamos un salto de linea
+        takeIt();
+    }
+    break;
+    case '\r': {
+        //html += "<br>"; //insertamos un salto de linea
+        takeIt();
+        
+    }
+    break;
+    case '\t':{
+        html += "&#9"; //agregamos tabulacion
+        takeIt();
+    }
+      
       break;
     }
   }
@@ -106,7 +132,7 @@ public final class Scanner {
     case 'Z':
       takeIt();
       while (isLetter(currentChar) || isDigit(currentChar))
-        takeIt();
+        takeIt(); //agregar el html para letras o digitos para el identificador
       return Token.IDENTIFIER;
 
     case '0':  case '1':  case '2':  case '3':  case '4':
@@ -221,6 +247,16 @@ public final class Scanner {
 
     pos.finish = sourceFile.getCurrentLine();
     tok = new Token(kind, currentSpelling.toString(), pos);
+    
+    if(tok.kind >= tok.firstReservedWord && tok.kind <= tok.lastReservedWord){
+        this.html += "<font color= '#000000'><b>" + tok.spelling + "</b></font>";
+    }
+    else if(tok.kind == tok.INTLITERAL || tok.kind == tok.CHARLITERAL){
+        this.html += "<font color='#103A7E'><b>"+ tok.spelling +"</font>";
+    }
+    else{
+        this.html += tok.spelling;
+    }
     /*Almacenamos los tokens*/
     lstTokens.add(tok);
       System.out.println(tok);

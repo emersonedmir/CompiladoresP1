@@ -11,7 +11,7 @@ public class ProcFuncs extends Declaration {
 
     @Override
     public Object visit(Visitor v, Object o) {
-        return null; // TODO falta visitProcFunc
+        return v.visitProcFuncs(this, o);
     }
 
     public Declaration pfAST;

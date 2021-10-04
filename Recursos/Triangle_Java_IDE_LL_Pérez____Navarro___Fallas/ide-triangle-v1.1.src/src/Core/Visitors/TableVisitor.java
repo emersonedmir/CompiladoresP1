@@ -27,18 +27,19 @@ import Triangle.AbstractSyntaxTrees.EmptyCommand;
 import Triangle.AbstractSyntaxTrees.EmptyExpression;
 import Triangle.AbstractSyntaxTrees.EmptyFormalParameterSequence;
 import Triangle.AbstractSyntaxTrees.ErrorTypeDenoter;
-import Triangle.AbstractSyntaxTrees.ForCommand;
 import Triangle.AbstractSyntaxTrees.FuncActualParameter;
 import Triangle.AbstractSyntaxTrees.FuncDeclaration;
 import Triangle.AbstractSyntaxTrees.FuncFormalParameter;
 import Triangle.AbstractSyntaxTrees.Identifier;
 import Triangle.AbstractSyntaxTrees.IfCommand;
 import Triangle.AbstractSyntaxTrees.IfExpression;
+import Triangle.AbstractSyntaxTrees.InVarDecl;
 import Triangle.AbstractSyntaxTrees.IntTypeDenoter;
 import Triangle.AbstractSyntaxTrees.IntegerExpression;
 import Triangle.AbstractSyntaxTrees.IntegerLiteral;
 import Triangle.AbstractSyntaxTrees.LetCommand;
 import Triangle.AbstractSyntaxTrees.LetExpression;
+import Triangle.AbstractSyntaxTrees.LocalDeclaration;
 import Triangle.AbstractSyntaxTrees.MultipleActualParameterSequence;
 import Triangle.AbstractSyntaxTrees.MultipleArrayAggregate;
 import Triangle.AbstractSyntaxTrees.MultipleFieldTypeDenoter;
@@ -50,9 +51,14 @@ import Triangle.AbstractSyntaxTrees.ProcDeclaration;
 import Triangle.AbstractSyntaxTrees.ProcFormalParameter;
 import Triangle.AbstractSyntaxTrees.ProcFuncs;
 import Triangle.AbstractSyntaxTrees.Program;
+import Triangle.AbstractSyntaxTrees.RangeVarDecl;
 import Triangle.AbstractSyntaxTrees.RecordExpression;
 import Triangle.AbstractSyntaxTrees.RecordTypeDenoter;
 import Triangle.AbstractSyntaxTrees.RecursiveDeclaration;
+import Triangle.AbstractSyntaxTrees.RepeatForRange;
+import Triangle.AbstractSyntaxTrees.RepeatForRangeUntil;
+import Triangle.AbstractSyntaxTrees.RepeatForRangeWhile;
+import Triangle.AbstractSyntaxTrees.RepeatIn;
 import Triangle.AbstractSyntaxTrees.SequentialCommand;
 import Triangle.AbstractSyntaxTrees.SequentialDeclaration;
 import Triangle.AbstractSyntaxTrees.SimpleTypeDenoter;
@@ -69,7 +75,7 @@ import Triangle.AbstractSyntaxTrees.UnaryOperatorDeclaration;
 import Triangle.AbstractSyntaxTrees.UntilCommand;
 import Triangle.AbstractSyntaxTrees.VarActualParameter;
 import Triangle.AbstractSyntaxTrees.VarDeclaration;
-import Triangle.AbstractSyntaxTrees.VarDeclarationTD;
+import Triangle.AbstractSyntaxTrees.VarExpression;
 import Triangle.AbstractSyntaxTrees.VarFormalParameter;
 import Triangle.AbstractSyntaxTrees.Visitor;
 import Triangle.AbstractSyntaxTrees.VnameExpression;
@@ -90,7 +96,7 @@ import javax.swing.table.DefaultTableModel;
  *
  * Generates a DefaultTableModel, used to draw a Jable.
  *
- * @author Luis Leopoldo Pérez <luiperpe@ns.isi.ulatina.ac.cr>
+ * @author Luis Leopoldo P?rez <luiperpe@ns.isi.ulatina.ac.cr>
  */
 public class TableVisitor implements Visitor {
     
@@ -119,13 +125,9 @@ public class TableVisitor implements Visitor {
   }
   
   public Object visitIfCommand(IfCommand ast, Object o) { 
-      
-
-          ast.E.visit(this, null);
-          ast.C1.visit(this, null);
-          ast.C2.visit(this, null);
-      
-      
+      ast.E.visit(this, null);
+      ast.C1.visit(this, null);
+      ast.C2.visit(this, null);
       
       return(null);
   }
@@ -634,64 +636,101 @@ public class TableVisitor implements Visitor {
     // </editor-fold>
 
     @Override
-    public Object visitVarDeclarationTD(VarDeclarationTD ast, Object o) {
-        try {
-      addIdentifier(ast.I.spelling, 
-              "KnownAddress", 
-              (ast.entity!=null?ast.entity.size:0), 
-              ((KnownAddress)ast.entity).address.level, 
-              ((KnownAddress)ast.entity).address.displacement, 
-              -1);
-      } catch (NullPointerException e) { }
-      
-      ast.E.visit(this, null);
-      return(null);
-    }
-
-    @Override
     public Object visitDoCommand(DoCommand ast, Object o) {
-        ast.E.visit(this, null);
         ast.C.visit(this, null);
-      
-      return(null);
-    }
-
-    @Override
-    public Object visitForCommand(ForCommand ast, Object o) {
-        try {
-      addIdentifier(ast.I.spelling, 
-              "Field", 
-              (ast.entity!=null?ast.entity.size:0),
-              -1, ((Field)ast.entity).fieldOffset, -1);      
-    } catch (NullPointerException e) { }
-      ast.C.visit(this, null);
-      ast.I.visit(this, null);
-      ast.E.visit(this, null);
-
-
-      return(null);
+        ast.E.visit(this, null);
+        return (null);
     }
 
     @Override
     public Object visitProcFuncs(ProcFuncs ast, Object o) {
-        ast.pfAST.visit(this, null);
         ast.pf2AST.visit(this, null);
-      
-        return(null);
+        ast.pfAST.visit(this, null);
+        return (null);
     }
 
     @Override
     public Object visitRecursiveDeclaration(RecursiveDeclaration ast, Object o) {
-        ast.D.visit(this,null);
-        return(null);
+        ast.D.visit(this, null);
+        return (null);
     }
 
     @Override
     public Object visitUntilCommand(UntilCommand ast, Object o) {
-        ast.E.visit(this, null);
         ast.C.visit(this, null);
+        ast.E.visit(this, null);
+        return (null);
+    }
+
+    @Override
+    public Object visitRangeVarDecl(RangeVarDecl ast, Object o) {
+        ast.E.visit(this, null);
+        ast.I.visit(this, null);
+        return (null);
+    }
+
+    @Override
+    public Object visitRepeatForRange(RepeatForRange ast, Object o) {
+        ast.C.visit(this, null);
+        ast.D.visit(this,null);
+        ast.E.visit(this, null);
+        return (null);
+    }
+
+
+
+ 
+
+    @Override
+    public Object visitRepeatForRangeWhile(RepeatForRangeWhile ast, Object o) {
+        ast.D.visit(this, null);
+        ast.E1.visit(this, null);
+        ast.C.visit(this, null);
+        ast.E2.visit(this, null);
       
-        return(null);
+      return(null);
+    }
+
+    @Override
+    public Object visitRepeatForRangeUntil(RepeatForRangeUntil ast, Object o) {
+        ast.D.visit(this, null);
+        ast.E1.visit(this, null);
+        ast.C.visit(this, null);
+        ast.E2.visit(this, null);
+      
+      return(null);
+    }
+
+    @Override
+    public Object visitInVarDecl(InVarDecl ast, Object o) {
+        ast.E.visit(this, null);
+        ast.I.visit(this, null);
+      
+      return(null);
+    }
+
+    @Override
+    public Object visitRepeatIn(RepeatIn ast, Object o) {
+        ast.C.visit(this, null);
+        ast.IVD.visit(this, null);
+      
+      return(null);
+    }
+
+    @Override
+    public Object visitLocalDeclaration(LocalDeclaration ast, Object o) {
+        ast.D1.visit(this, null);
+        ast.D2.visit(this, null);
+      
+      return(null);
+    }
+
+    @Override
+    public Object visitVarExpression(VarExpression ast, Object o) {
+        ast.E.visit(this, null);
+        ast.I.visit(this, null);
+      
+      return(null);
     }
 
     
