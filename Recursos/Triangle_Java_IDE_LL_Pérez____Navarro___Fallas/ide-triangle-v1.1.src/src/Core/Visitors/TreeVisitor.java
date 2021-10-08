@@ -98,199 +98,203 @@ public class TreeVisitor implements Visitor {
      */
     public TreeVisitor() {
     }
-    
+    public String XML="";
     // <editor-fold defaultstate="collapsed" desc=" Commands ">    
     // Commands  
     public Object visitAssignCommand(AssignCommand ast, Object o) {
-        return(createBinary("Assign Command", ast.V, ast.E));
+        return(createBinary("AssignCommand", ast.V, ast.E));
     }
     
     public Object visitCallCommand(CallCommand ast, Object o) {
-        return(createBinary("Call Command", ast.I, ast.APS));
+        return(createBinary("CallCommand", ast.I, ast.APS));
     }
     
     public Object visitEmptyCommand(EmptyCommand ast, Object o) {
-        return(createNullary("Empty Command"));
+        XML+="<EmptyCommand value = \"skip\">";
+        return(createNullary("EmptyCommand"));
     }
     
     public Object visitIfCommand(IfCommand ast, Object obj) {
 
-        return(createTernary("If Command", ast.E, ast.C1, ast.C2));
+        return(createTernary("IfCommand", ast.E, ast.C1, ast.C2));
         
     }
     
     public Object visitLetCommand(LetCommand ast, Object obj) {
-        return(createBinary("Let Command", ast.D, ast.C));
+        return(createBinary("LetCommand", ast.D, ast.C));
     }
     
     public Object visitSequentialCommand(SequentialCommand ast, Object obj) {
-        return(createBinary("Sequential Command", ast.C1, ast.C2));
+        return(createBinary("SequentialCommand", ast.C1, ast.C2));
     }
     
     public Object visitWhileCommand(WhileCommand ast, Object obj) {
-        return(createBinary("While Command", ast.E, ast.C));
+        return(createBinary("WhileCommand", ast.E, ast.C));
     }
     // </editor-fold>
     
     // <editor-fold defaultstate="collapsed" desc=" Expressions ">
     // Expressions
     public Object visitArrayExpression(ArrayExpression ast, Object obj) {
-        return(createUnary("Array Expression", ast.AA));
+        return(createUnary("ArrayExpression", ast.AA));
     }
     
     public Object visitBinaryExpression(BinaryExpression ast, Object obj) {
-        return(createTernary("Binary Expression", ast.E1, ast.O, ast.E2));
+        return(createTernary("BinaryExpression", ast.E1, ast.O, ast.E2));
     }
     
     public Object visitCallExpression(CallExpression ast, Object obj) {
-        return(createBinary("Call Expression", ast.I, ast.APS));
+        return(createBinary("CallExpression", ast.I, ast.APS));
     }
     
     public Object visitCharacterExpression(CharacterExpression ast, Object obj) {
-        return(createUnary("Character Expression", ast.CL));
+        return(createUnary("CharacterExpression", ast.CL));
     }
     
     public Object visitEmptyExpression(EmptyExpression ast, Object obj) {
-        return(createNullary("Empty Expression"));
+        XML+="<EmptyExpression value = \"skip\">";
+        return(createNullary("EmptyExpression"));
     }
     
     public Object visitIfExpression(IfExpression ast, Object obj) {
-        return(createTernary("If Expression", ast.E1, ast.E2, ast.E3));
+        return(createTernary("IfExpression", ast.E1, ast.E2, ast.E3));
     }
     
     public Object visitIntegerExpression(IntegerExpression ast, Object obj) {
-        return(createUnary("Integer Expression", ast.IL));
+        return(createUnary("IntegerExpression", ast.IL));
     }
     
     public Object visitLetExpression(LetExpression ast, Object obj) {
-        return(createBinary("Let Expression", ast.D, ast.E));
+        return(createBinary("LetExpression", ast.D, ast.E));
     }
     
     public Object visitRecordExpression(RecordExpression ast, Object obj) {
-        return(createUnary("Record Expression", ast.RA));
+        return(createUnary("RecordExpression", ast.RA));
     }
     
     public Object visitUnaryExpression(UnaryExpression ast, Object obj) {
-        return(createBinary("Unary Expression", ast.O, ast.E));
+        return(createBinary("UnaryExpression", ast.O, ast.E));
     }
     
     public Object visitVnameExpression(VnameExpression ast, Object obj) {
-        return(createUnary("Vname Expression", ast.V));
+        return(createUnary("VnameExpression", ast.V));
     }
     // </editor-fold>
     
     // <editor-fold defaultstate="collapsed" desc=" Declarations ">
     // Declarations
     public Object visitBinaryOperatorDeclaration(BinaryOperatorDeclaration ast, Object obj) {
-        return(createQuaternary("Binary Operator Declaration", ast.O, ast.ARG1, ast.ARG2, ast.RES));
+        return(createQuaternary("BinaryOperatorDeclaration", ast.O, ast.ARG1, ast.ARG2, ast.RES));
     }
     
     public Object visitConstDeclaration(ConstDeclaration ast, Object obj) {
-        return(createBinary("Constant Declaration", ast.I, ast.E));
+        return(createBinary("ConstantDeclaration", ast.I, ast.E));
     }
     
     public Object visitFuncDeclaration(FuncDeclaration ast, Object obj) {
-        return(createQuaternary("Function Declaration", ast.I, ast.FPS, ast.T, ast.E));
+        return(createQuaternary("FunctionDeclaration", ast.I, ast.FPS, ast.T, ast.E));
     }
     
     public Object visitProcDeclaration(ProcDeclaration ast, Object obj) {
-        return(createTernary("Procedure Declaration", ast.I, ast.FPS, ast.C));        
+        return(createTernary("ProcedureDeclaration", ast.I, ast.FPS, ast.C));        
     }
     
     public Object visitSequentialDeclaration(SequentialDeclaration ast, Object obj) {
-        return(createBinary("Sequential Declaration", ast.D1, ast.D2));
+        return(createBinary("SequentialDeclaration", ast.D1, ast.D2));
     }
     
     public Object visitTypeDeclaration(TypeDeclaration ast, Object obj) {
-        return(createBinary("Type Declaration", ast.I, ast.T));
+        return(createBinary("TypeDeclaration", ast.I, ast.T));
     }
     
     public Object visitUnaryOperatorDeclaration(UnaryOperatorDeclaration ast, Object obj) {
-        return(createTernary("Unary Operator Declaration", ast.O, ast.ARG, ast.RES));
+        return(createTernary("UnaryOperatorDeclaration", ast.O, ast.ARG, ast.RES));
     }
     
     public Object visitVarDeclaration(VarDeclaration ast, Object obj) {
-        return(createBinary("Variable Declaration", ast.I, ast.T));
+        return(createBinary("VariableDeclaration", ast.I, ast.T));
     }
     // </editor-fold>
     
     // <editor-fold defaultstate="collapsed" desc=" Aggregates ">
     // Array Aggregates
     public Object visitMultipleArrayAggregate(MultipleArrayAggregate ast, Object obj) {
-        return(createBinary("Multiple Array Aggregate", ast.E, ast.AA));
+        return(createBinary("MultipleArrayAggregate", ast.E, ast.AA));
     }
     
     public Object visitSingleArrayAggregate(SingleArrayAggregate ast, Object obj) {
-        return(createUnary("Single Array Aggregate", ast.E));
+        return(createUnary("SingleArrayAggregate", ast.E));
     }
     
     // Record Aggregates
     public Object visitMultipleRecordAggregate(MultipleRecordAggregate ast, Object obj) {
-        return(createTernary("Multiple Record Aggregate", ast.I, ast.E, ast.RA));
+        return(createTernary("MultipleRecordAggregate", ast.I, ast.E, ast.RA));
     }
     
     public Object visitSingleRecordAggregate(SingleRecordAggregate ast, Object obj) {
-        return(createBinary("Single Record Aggregate", ast.I, ast.E));
+        return(createBinary("SingleRecordAggregate", ast.I, ast.E));
     }
     // </editor-fold>
     
     // <editor-fold defaultstate="collapsed" desc=" Parameters ">
     // Formal Parameters   
     public Object visitConstFormalParameter(ConstFormalParameter ast, Object obj) {
-        return(createBinary("Constant Formal Parameter", ast.I, ast.T));
+        return(createBinary("ConstantFormalParameter", ast.I, ast.T));
     }
     
     public Object visitFuncFormalParameter(FuncFormalParameter ast, Object obj) {
-        return(createTernary("Function Formal Parameter", ast.I, ast.FPS, ast.T));
+        return(createTernary("FunctionFormalParameter", ast.I, ast.FPS, ast.T));
     }
     
     public Object visitProcFormalParameter(ProcFormalParameter ast, Object obj) {
-        return(createBinary("Procedure Formal Parameter", ast.I, ast.FPS));
+        return(createBinary("ProcedureFormalParameter", ast.I, ast.FPS));
     }
     
     public Object visitVarFormalParameter(VarFormalParameter ast, Object obj) {
-        return(createBinary("Variable Formal Parameter", ast.I, ast.T));
+        return(createBinary("VariableFormalParameter", ast.I, ast.T));
     }
     
     public Object visitEmptyFormalParameterSequence(EmptyFormalParameterSequence ast, Object obj) {
-        return(createNullary("Empty Formal Parameter Sequence"));
+        XML+="<EmptyFormalParameterSequence value = \"skip\">";
+        return(createNullary("EmptyFormalParameterSequence"));
     }
     
     public Object visitMultipleFormalParameterSequence(MultipleFormalParameterSequence ast, Object obj) {
-        return(createBinary("Multiple Formal Parameter Sequence", ast.FP, ast.FPS));
+        return(createBinary("MultipleFormalParameterSequence", ast.FP, ast.FPS));
     }
     
     public Object visitSingleFormalParameterSequence(SingleFormalParameterSequence ast, Object obj) {
-        return(createUnary("Single Formal Parameter Sequence", ast.FP));
+        return(createUnary("SingleFormalParameterSequence", ast.FP));
     }
     
     // Actual Parameters
     public Object visitConstActualParameter(ConstActualParameter ast, Object obj) {
-        return(createUnary("Constant Actual Parameter", ast.E));
+        return(createUnary("ConstantActualParameter", ast.E));
     }
     
     public Object visitFuncActualParameter(FuncActualParameter ast, Object obj) {
-        return(createUnary("Function Actual Parameter", ast.I));
+        return(createUnary("FunctionActualParameter", ast.I));
     }
     
     public Object visitProcActualParameter(ProcActualParameter ast, Object obj) {
-        return(createUnary("Procedure Actual Parameter", ast.I));
+        return(createUnary("ProcedureActualParameter", ast.I));
     }
     
     public Object visitVarActualParameter(VarActualParameter ast, Object obj) {
-        return(createUnary("Variable Actual Parameter", ast.V));
+        return(createUnary("VariableActualParameter", ast.V));
     }
     
     public Object visitEmptyActualParameterSequence(EmptyActualParameterSequence ast, Object obj) {
-        return(createNullary("Empty Actual Parameter Sequence"));
+        XML+="<EmptyActualParameterSequence value = \"skip\"/>";
+        return(createNullary("EmptyActualParameterSequence"));
     }
     
     public Object visitMultipleActualParameterSequence(MultipleActualParameterSequence ast, Object obj) {
-        return(createBinary("Multiple Actual Parameter Sequence", ast.AP, ast.APS));
+        return(createBinary("MultipleActualParameterSequence", ast.AP, ast.APS));
     }
     
     public Object visitSingleActualParameterSequence(SingleActualParameterSequence ast, Object obj) {
-        return(createUnary("Single Actual Parameter Sequence", ast.AP));
+        return(createUnary("SingleActualParameterSequence", ast.AP));
     }
     // </editor-fold>
         
@@ -301,7 +305,7 @@ public class TreeVisitor implements Visitor {
     }
     
     public Object visitArrayTypeDenoter(ArrayTypeDenoter ast, Object obj) {
-        return(createBinary("Array Type Denoter", ast.IL, ast.T));
+        return(createBinary("ArrayTypeDenoter", ast.IL, ast.T));
     }
     
     public Object visitBoolTypeDenoter(BoolTypeDenoter ast, Object obj) {
@@ -317,7 +321,7 @@ public class TreeVisitor implements Visitor {
     }
     
     public Object visitSimpleTypeDenoter(SimpleTypeDenoter ast, Object obj) {
-        return(createUnary("Simple Type Denoter", ast.I));
+        return(createUnary("SimpleTypeDenoter", ast.I));
     }
     
     public Object visitIntTypeDenoter(IntTypeDenoter ast, Object obj) {
@@ -325,33 +329,37 @@ public class TreeVisitor implements Visitor {
     }
     
     public Object visitRecordTypeDenoter(RecordTypeDenoter ast, Object obj) {
-        return(createUnary("Record Type Denoter", ast.FT));
+        return(createUnary("RecordTypeDenoter", ast.FT));
     }
     
     public Object visitMultipleFieldTypeDenoter(MultipleFieldTypeDenoter ast, Object obj) {
-        return(createTernary("Multiple Field Type Denoter", ast.I, ast.T, ast.FT));
+        return(createTernary("MultipleFieldTypeDenoter", ast.I, ast.T, ast.FT));
     }
     
     public Object visitSingleFieldTypeDenoter(SingleFieldTypeDenoter ast, Object obj) {
-        return(createBinary("Single Field Type Denoter", ast.I, ast.T));
+        return(createBinary("SingleFieldTypeDenoter", ast.I, ast.T));
     }
     // </editor-fold>
     
     // <editor-fold defaultstate="collapsed" desc=" Literals, Identifiers and Operators ">
     // Literals, Identifiers and Operators
     public Object visitCharacterLiteral(CharacterLiteral ast, Object obj) {
+        XML+="<CharLiteral value = \""+ ast.spelling +"\"/>";
         return(createNullary(ast.spelling));
     }
     
     public Object visitIdentifier(Identifier ast, Object obj) {
+        XML+="<Identifier value = \""+ ast.spelling +"\"/>";
         return(createNullary(ast.spelling));
     }
     
     public Object visitIntegerLiteral(IntegerLiteral ast, Object obj) {
+        XML+="<IntegerLiteral value = \""+ ast.spelling +"\"/>";
         return(createNullary(ast.spelling));
     }
     
     public Object visitOperator(Operator ast, Object obj) {
+        XML+="<Operator value = \""+ ast.spelling +"\"/>";
         return(createNullary(ast.spelling));
     }
     // </editor-fold>
@@ -359,18 +367,19 @@ public class TreeVisitor implements Visitor {
     // <editor-fold defaultstate="collapsed" desc=" Values or Variable Names ">
     // Values or Variable Names
     public Object visitDotVname(DotVname ast, Object obj) {
-        return(createBinary("Dot Vname", ast.I, ast.V));
+        return(createBinary("DotVname", ast.I, ast.V));
     }
     
     public Object visitSimpleVname(SimpleVname ast, Object obj) {
-        return(createUnary("Simple Vname", ast.I));
+        return(createUnaryIdentifier("SimpleVname", ast.I));
     }
     
     public Object visitSubscriptVname(SubscriptVname ast, Object obj) {
-        return(createBinary("Subscript Vname", ast.V, ast.E));
+        return(createBinary("SubscriptVname", ast.V, ast.E));
     }
     
     public Object visitProgram(Program ast, Object obj) {
+        this.XML="";
         return(createUnary("Program", ast.C));
     }
     // </editor-fold>
@@ -395,6 +404,14 @@ public class TreeVisitor implements Visitor {
      * @return The tree node.
      */
     public DefaultMutableTreeNode createUnary(String caption, AST child1) {
+         XML+="<"+caption+">";
+        DefaultMutableTreeNode t = new DefaultMutableTreeNode(caption);
+        t.add((DefaultMutableTreeNode)child1.visit(this, null));
+        XML+="</"+caption+">";
+        return(t);
+    }
+    public DefaultMutableTreeNode createUnaryIdentifier(String caption, Identifier child1) {
+         //XML+="<"+caption+" values= \""+ child1.spelling +"\"/>";
         DefaultMutableTreeNode t = new DefaultMutableTreeNode(caption);
         t.add((DefaultMutableTreeNode)child1.visit(this, null));
         
@@ -409,10 +426,11 @@ public class TreeVisitor implements Visitor {
      * @return The tree node.
      */
     public DefaultMutableTreeNode createBinary(String caption, AST child1, AST child2) {
+        XML+="<"+caption+">";
         DefaultMutableTreeNode t = new DefaultMutableTreeNode(caption);
         t.add((DefaultMutableTreeNode)child1.visit(this, null));
         t.add((DefaultMutableTreeNode)child2.visit(this, null));
-        
+        XML+="</"+caption+">";
         return(t);
     }
     
@@ -425,11 +443,12 @@ public class TreeVisitor implements Visitor {
      * @return The tree node.
      */
     public DefaultMutableTreeNode createTernary(String caption, AST child1, AST child2, AST child3) {
+         XML+="<"+caption+">";
         DefaultMutableTreeNode t = new DefaultMutableTreeNode(caption);
         t.add((DefaultMutableTreeNode)child1.visit(this, null));
         t.add((DefaultMutableTreeNode)child2.visit(this, null));
         t.add((DefaultMutableTreeNode)child3.visit(this, null));
-        
+        XML+="</"+caption+">";
         return(t);        
     }
     
@@ -443,12 +462,13 @@ public class TreeVisitor implements Visitor {
      * @return The tree node.
      */
     public DefaultMutableTreeNode createQuaternary(String caption, AST child1, AST child2, AST child3, AST child4) {
+        XML+="</"+caption+">";
         DefaultMutableTreeNode t = new DefaultMutableTreeNode(caption);
         t.add((DefaultMutableTreeNode)child1.visit(this, null));
         t.add((DefaultMutableTreeNode)child2.visit(this, null));
         t.add((DefaultMutableTreeNode)child3.visit(this, null));
         t.add((DefaultMutableTreeNode)child4.visit(this, null));
-        
+        XML+="</"+caption+">";
         return(t);             
     }
     // </editor-fold>
@@ -457,29 +477,29 @@ public class TreeVisitor implements Visitor {
 
     @Override
     public Object visitDoCommand(DoCommand ast, Object o) {
-        return(createBinary("Do Command", ast.E, ast.C));
+        return(createBinary("DoCommand", ast.E, ast.C));
     }
 
   
 
     @Override
     public Object visitProcFuncs(ProcFuncs ast, Object o) {
-        return(createBinary("Proc-Funcs instruction", ast.pfAST, ast.pf2AST));
+        return(createBinary("Proc-Funcs", ast.pfAST, ast.pf2AST));
     }
 
     @Override
     public Object visitRecursiveDeclaration(RecursiveDeclaration ast, Object o) {
-        return (this.createUnary("Recursive instruction", ast.D));
+        return (this.createUnary("RecursiveDeclaration", ast.D));
     }
 
     @Override
     public Object visitUntilCommand(UntilCommand ast, Object o) {
-        return(createBinary("Until command", ast.E, ast.C));
+        return(createBinary("UntilCommand", ast.E, ast.C));
     }
 
     @Override
     public Object visitRangeVarDecl(RangeVarDecl ast, Object o) {
-        return(createBinary("RangeVarDecl command", ast.I, ast.E));
+        return(createBinary("RangeVarDeclCommand", ast.I, ast.E));
     }
 
     @Override
@@ -499,22 +519,22 @@ public class TreeVisitor implements Visitor {
 
     @Override
     public Object visitInVarDecl(InVarDecl ast, Object o) {
-        return(createBinary("InVarDeclaration command", ast.E, ast.I));
+        return(createBinary("InVarDeclarationCommand", ast.E, ast.I));
     }
 
     @Override
     public Object visitRepeatIn(RepeatIn ast, Object o) {
-        return(createBinary("RepeatIn command", ast.IVD, ast.C));
+        return(createBinary("RepeatInCommand", ast.IVD, ast.C));
     }
 
     @Override
     public Object visitLocalDeclaration(LocalDeclaration ast, Object o) {
-        return(createBinary("LocalDeclaration command", ast.D1, ast.D2));
+        return(createBinary("LocalDeclarationCommand", ast.D1, ast.D2));
     }
 
     @Override
     public Object visitVarExpression(VarExpression ast, Object o) {
-        return(createBinary("Until command", ast.E, ast.I));
+        return(createBinary("UntilCommand", ast.E, ast.I));
     }
 
     

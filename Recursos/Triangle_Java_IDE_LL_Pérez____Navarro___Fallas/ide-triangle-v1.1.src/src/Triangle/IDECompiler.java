@@ -34,6 +34,7 @@ public class IDECompiler {
      * Creates a new instance of IDECompiler.
      *
      */
+    public String fullName="";
     public IDECompiler() {
     }
     
@@ -49,25 +50,16 @@ public class IDECompiler {
                            " **********");
         
         System.out.println("Syntactic Analysis ...");
+        fullName=sourceName;
         SourceFile source = new SourceFile(sourceName);
         Scanner scanner = new Scanner(source);
+        scanner.html ="";
         report = new IDEReporter();
         Parser parser = new Parser(scanner, report);
         boolean success = false;
         
         rootAST = parser.parseProgram();
         
-        scanner.html +="</p>";
-        String ruta = sourceName + ".html";
-        String contenido = scanner.html;
-        File file = new File(ruta);
-        if (!file.exists()) {
-                file.createNewFile();
-            }
-        FileWriter fw = new FileWriter(file);
-            BufferedWriter bw = new BufferedWriter(fw);
-            bw.write(contenido);
-            bw.close();
         
         
         
@@ -87,8 +79,25 @@ public class IDECompiler {
             }
         }
 
-        if (success)
-            System.out.println("Compilation was successful.");
+        if (success){
+            scanner.html +="</p>";
+            
+            String[] palabras = sourceName.split("\\.");
+            
+        
+            String ruta = palabras[0] + ".html";
+            String contenido = scanner.html;
+            File file = new File(ruta);
+            if (!file.exists()) {
+                    file.createNewFile();
+                }
+            FileWriter fw = new FileWriter(file);
+                BufferedWriter bw = new BufferedWriter(fw);
+                bw.write(contenido);
+                bw.close();
+        System.out.println("Compilation was successful.");
+        }
+            
         else
             System.out.println("Compilation was unsuccessful.");
         

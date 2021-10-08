@@ -100,6 +100,8 @@ import javax.swing.table.DefaultTableModel;
  */
 public class TableVisitor implements Visitor {
     
+    
+    
     /** Creates a new instance of TableDetails */
     public TableVisitor() {        
     }
@@ -107,13 +109,15 @@ public class TableVisitor implements Visitor {
   // <editor-fold defaultstate="collapsed" desc=" Commands ">
   // Commands
   public Object visitAssignCommand(AssignCommand ast, Object o) { 
+      
       ast.V.visit(this, null);
       ast.E.visit(this, null);
-      
+
       return(null);
   }
   
   public Object visitCallCommand(CallCommand ast, Object o) { 
+     
       ast.I.visit(this, null);
       ast.APS.visit(this, null);
       
@@ -121,10 +125,12 @@ public class TableVisitor implements Visitor {
   }
   
   public Object visitEmptyCommand(EmptyCommand ast, Object o) { 
+     
       return(null);
   }
   
   public Object visitIfCommand(IfCommand ast, Object o) { 
+     
       ast.E.visit(this, null);
       ast.C1.visit(this, null);
       ast.C2.visit(this, null);
@@ -132,7 +138,8 @@ public class TableVisitor implements Visitor {
       return(null);
   }
   
-  public Object visitLetCommand(LetCommand ast, Object o) {     
+  public Object visitLetCommand(LetCommand ast, Object o) {  
+      
       ast.D.visit(this, null);
       ast.C.visit(this, null);
       
@@ -140,6 +147,7 @@ public class TableVisitor implements Visitor {
   }
   
   public Object visitSequentialCommand(SequentialCommand ast, Object o) { 
+      
       ast.C1.visit(this, null);
       ast.C2.visit(this, null);
       
@@ -147,6 +155,7 @@ public class TableVisitor implements Visitor {
   }
   
   public Object visitWhileCommand(WhileCommand ast, Object o) { 
+      
       ast.E.visit(this, null);
       ast.C.visit(this, null);
       
@@ -157,37 +166,43 @@ public class TableVisitor implements Visitor {
   // <editor-fold defaultstate="collapsed" desc=" Expressions ">
   // Expressions
   public Object visitArrayExpression(ArrayExpression ast, Object o) { 
+     
       ast.AA.visit(this, null);
       
       return(null);
   }
   
   public Object visitBinaryExpression(BinaryExpression ast, Object o) { 
+      
       ast.E1.visit(this, null);
-      ast.E2.visit(this, null);
       ast.O.visit(this, null);
+      ast.E2.visit(this, null);
       
       return(null);
   }
   
   public Object visitCallExpression(CallExpression ast, Object o) { 
+   
       ast.I.visit(this, null);
       ast.APS.visit(this, null);
-      
+     
       return(null);
   }
   
-  public Object visitCharacterExpression(CharacterExpression ast, Object o) { 
-      ast.CL.visit(this, null);
+  public Object visitCharacterExpression(CharacterExpression ast, Object o) {
       
+      ast.CL.visit(this, null);
+
       return(null);
   }
   
   public Object visitEmptyExpression(EmptyExpression ast, Object o) {       
+      
       return(null);
   }
   
   public Object visitIfExpression(IfExpression ast, Object o) {       
+      
       ast.E1.visit(this, null);
       ast.E2.visit(this, null);
       ast.E3.visit(this, null);
@@ -196,23 +211,29 @@ public class TableVisitor implements Visitor {
   }
   
   public Object visitIntegerExpression(IntegerExpression ast, Object o) { 
+      
+      ast.IL.visit(this, o);
+      
       return(null);
   }
   
   public Object visitLetExpression(LetExpression ast, Object o) { 
+      
       ast.D.visit(this, null);
       ast.E.visit(this, null);
-
+      
       return(null);
   }
   
-  public Object visitRecordExpression(RecordExpression ast, Object o) {   
+  public Object visitRecordExpression(RecordExpression ast, Object o) {  
+      
       ast.RA.visit(this, null);
       
       return(null);
   }
   
-  public Object visitUnaryExpression(UnaryExpression ast, Object o) {    
+  public Object visitUnaryExpression(UnaryExpression ast, Object o) {  
+      
       ast.E.visit(this, null);
       ast.O.visit(this, null);
       
@@ -220,6 +241,7 @@ public class TableVisitor implements Visitor {
   }
   
   public Object visitVnameExpression(VnameExpression ast, Object o) { 
+      
       ast.V.visit(this, null);
       
       return(null);
@@ -229,6 +251,7 @@ public class TableVisitor implements Visitor {
   // <editor-fold defaultstate="collapsed" desc=" Declarations ">
   // Declarations
   public Object visitBinaryOperatorDeclaration(BinaryOperatorDeclaration ast, Object o) {        
+     
       return(null);
   }
   
@@ -255,7 +278,7 @@ public class TableVisitor implements Visitor {
       
       ast.E.visit(this, null);
       ast.I.visit(this, null);
-
+      
       return(null);
   }
   
@@ -268,10 +291,11 @@ public class TableVisitor implements Visitor {
               ((KnownRoutine)ast.entity).address.displacement, 
               -1);      
       } catch (NullPointerException e) { }
+     
       ast.T.visit(this, null);            
       ast.FPS.visit(this, null);
       ast.E.visit(this, null);
-            
+         
       return(null);
   }
   
@@ -283,14 +307,15 @@ public class TableVisitor implements Visitor {
               ((KnownRoutine)ast.entity).address.displacement, 
               -1);
       } catch (NullPointerException e) { }
-      
+     
       ast.FPS.visit(this, null);
       ast.C.visit(this, null);
-            
+  
       return(null);
   }
   
   public Object visitSequentialDeclaration(SequentialDeclaration ast, Object o) {   
+     
       ast.D1.visit(this, null);
       ast.D2.visit(this, null);
       
@@ -298,12 +323,14 @@ public class TableVisitor implements Visitor {
   }
   
   public Object visitTypeDeclaration(TypeDeclaration ast, Object o) { 
+     
       ast.T.visit(this, null);
       
       return(null);
   }
   
-  public Object visitUnaryOperatorDeclaration(UnaryOperatorDeclaration ast, Object o) {        
+  public Object visitUnaryOperatorDeclaration(UnaryOperatorDeclaration ast, Object o) { 
+      
       return(null);
   }
   
@@ -318,6 +345,7 @@ public class TableVisitor implements Visitor {
       } catch (NullPointerException e) { }
       
       ast.T.visit(this, null);
+     
       return(null);
   }
   
@@ -326,6 +354,7 @@ public class TableVisitor implements Visitor {
   // <editor-fold defaultstate="collapsed" desc=" Aggregates ">
   // Array Aggregates
   public Object visitMultipleArrayAggregate(MultipleArrayAggregate ast, Object o) { 
+     
       ast.AA.visit(this, null);
       ast.E.visit(this, null);
       
@@ -333,6 +362,7 @@ public class TableVisitor implements Visitor {
   }
   
   public Object visitSingleArrayAggregate(SingleArrayAggregate ast, Object o) { 
+      
       ast.E.visit(this, null);
       
       return(null);
@@ -340,6 +370,7 @@ public class TableVisitor implements Visitor {
 
   // Record Aggregates
   public Object visitMultipleRecordAggregate(MultipleRecordAggregate ast, Object o) { 
+      
       ast.E.visit(this, null);
       ast.I.visit(this, null);
       ast.RA.visit(this, null);
@@ -348,6 +379,7 @@ public class TableVisitor implements Visitor {
   }
   
   public Object visitSingleRecordAggregate(SingleRecordAggregate ast, Object o) { 
+      
       ast.E.visit(this, null);
       ast.I.visit(this, null);
       
@@ -382,9 +414,10 @@ public class TableVisitor implements Visitor {
               ((UnknownRoutine)ast.entity).address.displacement,
               -1);
       } catch (NullPointerException e) { }
+      
       ast.FPS.visit(this, null);      
       ast.T.visit(this, null);     
-
+      
       return(null);
   }
   
@@ -397,6 +430,7 @@ public class TableVisitor implements Visitor {
               ((UnknownRoutine)ast.entity).address.displacement,
               -1);      
       } catch (NullPointerException e) { }
+      
       ast.FPS.visit(this, null);      
       
       return(null);
@@ -417,17 +451,20 @@ public class TableVisitor implements Visitor {
   }
 
   public Object visitEmptyFormalParameterSequence(EmptyFormalParameterSequence ast, Object o) { 
+     
       return(null);
   }
   
-  public Object visitMultipleFormalParameterSequence(MultipleFormalParameterSequence ast, Object o) { 
+  public Object visitMultipleFormalParameterSequence(MultipleFormalParameterSequence ast, Object o) {
+     
       ast.FP.visit(this, null);
       ast.FPS.visit(this, null);
-      
+     
       return(null);
   }
   
   public Object visitSingleFormalParameterSequence(SingleFormalParameterSequence ast, Object o) { 
+      
       ast.FP.visit(this, null);
       
       return(null);
@@ -435,41 +472,48 @@ public class TableVisitor implements Visitor {
 
   // Actual Parameters
   public Object visitConstActualParameter(ConstActualParameter ast, Object o) { 
+      
       ast.E.visit(this, null);
       
       return(null);
   }
   
   public Object visitFuncActualParameter(FuncActualParameter ast, Object o) { 
+      
       ast.I.visit(this, null);
       
       return(null);
   }
   
   public Object visitProcActualParameter(ProcActualParameter ast, Object o) { 
+      
       ast.I.visit(this, null);
       
       return(null);
   }
   
   public Object visitVarActualParameter(VarActualParameter ast, Object o) { 
+      
       ast.V.visit(this, null);
       
       return(null);
   }
 
-  public Object visitEmptyActualParameterSequence(EmptyActualParameterSequence ast, Object o) {       
+  public Object visitEmptyActualParameterSequence(EmptyActualParameterSequence ast, Object o) {    
+     
       return(null);
   }
   
   public Object visitMultipleActualParameterSequence(MultipleActualParameterSequence ast, Object o) { 
+      
       ast.AP.visit(this, null);
       ast.APS.visit(this, null);
       
       return(null);
   }
   
-  public Object visitSingleActualParameterSequence(SingleActualParameterSequence ast, Object o) {   
+  public Object visitSingleActualParameterSequence(SingleActualParameterSequence ast, Object o) {  
+      
       ast.AP.visit(this, null);
       
       return(null);
@@ -478,11 +522,12 @@ public class TableVisitor implements Visitor {
 
   // <editor-fold defaultstate="collapsed" desc=" Type Denoters ">
   // Type Denoters
-  public Object visitAnyTypeDenoter(AnyTypeDenoter ast, Object o) {      
+  public Object visitAnyTypeDenoter(AnyTypeDenoter ast, Object o) { 
       return(null);
   }
   
   public Object visitArrayTypeDenoter(ArrayTypeDenoter ast, Object o) { 
+     
       ast.IL.visit(this, null);
       ast.T.visit(this, null);
       
@@ -502,6 +547,7 @@ public class TableVisitor implements Visitor {
   }
   
   public Object visitSimpleTypeDenoter(SimpleTypeDenoter ast, Object o) { 
+     
       ast.I.visit(this, null);
       
       return(null);
@@ -511,8 +557,10 @@ public class TableVisitor implements Visitor {
       return(null);
   }
   
-  public Object visitRecordTypeDenoter(RecordTypeDenoter ast, Object o) {   
+  public Object visitRecordTypeDenoter(RecordTypeDenoter ast, Object o) { 
+
       ast.FT.visit(this, null);
+     
       return(null);
   }
 
@@ -523,6 +571,7 @@ public class TableVisitor implements Visitor {
               (ast.entity!=null?ast.entity.size:0),
               -1, ((Field)ast.entity).fieldOffset, -1);      
     } catch (NullPointerException e) { }
+
       ast.FT.visit(this, null);
       ast.I.visit(this, null);
       ast.T.visit(this, null);
@@ -538,9 +587,10 @@ public class TableVisitor implements Visitor {
               (ast.entity!=null?ast.entity.size:0),
               -1, ((Field)ast.entity).fieldOffset, -1);
       } catch (NullPointerException e) { }
+
       ast.I.visit(this, null);
       ast.T.visit(this, null);
-  
+
       return(null);
   }
   
@@ -549,10 +599,11 @@ public class TableVisitor implements Visitor {
   // <editor-fold defaultstate="collapsed" desc=" Literals, Identifiers and Operators ">
   // Literals, Identifiers and Operators
   public Object visitCharacterLiteral(CharacterLiteral ast, Object o) {   
+
       return(null);
   }
   
-  public Object visitIdentifier(Identifier ast, Object o) {             
+  public Object visitIdentifier(Identifier ast, Object o) {  
       return(null);
   }
   
@@ -570,22 +621,25 @@ public class TableVisitor implements Visitor {
   // <editor-fold defaultstate="collapsed" desc=" Values or Variable Names ">
   // Value-or-variable names
   public Object visitDotVname(DotVname ast, Object o) { 
+      
       ast.I.visit(this, null);
       ast.V.visit(this, null);
-  
+      
       return(null);
   }
   
   public Object visitSimpleVname(SimpleVname ast, Object o) { 
+      
       ast.I.visit(this, null);
-  
+      
       return(null);
   }
   
-  public Object visitSubscriptVname(SubscriptVname ast, Object o) { 
+  public Object visitSubscriptVname(SubscriptVname ast, Object o) {
+      
       ast.E.visit(this, null);
       ast.V.visit(this, null);
-  
+      
       return(null);
   }
   // </editor-fold>
@@ -593,6 +647,7 @@ public class TableVisitor implements Visitor {
   // <editor-fold defaultstate="collapsed" desc=" Table Creation Methods ">
   // Programs
   public Object visitProgram(Program ast, Object o) { 
+      
       ast.C.visit(this, null);
       
       return(null);
@@ -637,99 +692,114 @@ public class TableVisitor implements Visitor {
 
     @Override
     public Object visitDoCommand(DoCommand ast, Object o) {
+        
         ast.C.visit(this, null);
         ast.E.visit(this, null);
+        
         return (null);
     }
 
     @Override
     public Object visitProcFuncs(ProcFuncs ast, Object o) {
+        
         ast.pf2AST.visit(this, null);
         ast.pfAST.visit(this, null);
+        
         return (null);
     }
 
     @Override
     public Object visitRecursiveDeclaration(RecursiveDeclaration ast, Object o) {
+        
         ast.D.visit(this, null);
+        
         return (null);
     }
 
     @Override
     public Object visitUntilCommand(UntilCommand ast, Object o) {
+
         ast.C.visit(this, null);
         ast.E.visit(this, null);
+
         return (null);
     }
 
     @Override
     public Object visitRangeVarDecl(RangeVarDecl ast, Object o) {
+
         ast.E.visit(this, null);
         ast.I.visit(this, null);
+     
         return (null);
     }
 
     @Override
     public Object visitRepeatForRange(RepeatForRange ast, Object o) {
+ 
         ast.C.visit(this, null);
         ast.D.visit(this,null);
         ast.E.visit(this, null);
+
         return (null);
     }
 
 
-
- 
-
     @Override
     public Object visitRepeatForRangeWhile(RepeatForRangeWhile ast, Object o) {
+  
         ast.D.visit(this, null);
         ast.E1.visit(this, null);
         ast.C.visit(this, null);
         ast.E2.visit(this, null);
-      
+
       return(null);
     }
 
     @Override
     public Object visitRepeatForRangeUntil(RepeatForRangeUntil ast, Object o) {
+       
         ast.D.visit(this, null);
         ast.E1.visit(this, null);
         ast.C.visit(this, null);
         ast.E2.visit(this, null);
-      
+
       return(null);
     }
 
     @Override
     public Object visitInVarDecl(InVarDecl ast, Object o) {
+       
         ast.E.visit(this, null);
         ast.I.visit(this, null);
-      
+       
       return(null);
     }
 
     @Override
     public Object visitRepeatIn(RepeatIn ast, Object o) {
+        
         ast.C.visit(this, null);
         ast.IVD.visit(this, null);
-      
+        
       return(null);
     }
 
     @Override
     public Object visitLocalDeclaration(LocalDeclaration ast, Object o) {
+        
         ast.D1.visit(this, null);
         ast.D2.visit(this, null);
-      
+        
       return(null);
     }
 
     @Override
     public Object visitVarExpression(VarExpression ast, Object o) {
+        
         ast.E.visit(this, null);
         ast.I.visit(this, null);
-      
+        
       return(null);
     }
 

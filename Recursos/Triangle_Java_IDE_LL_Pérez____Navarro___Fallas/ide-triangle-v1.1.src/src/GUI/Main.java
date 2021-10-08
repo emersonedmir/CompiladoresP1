@@ -37,6 +37,8 @@ import Core.ExampleFileFilter;
 import javax.swing.event.InternalFrameEvent;
 import javax.swing.event.InternalFrameListener;
 import Core.Visitors.TreeVisitor;
+import Triangle.AbstractSyntaxTrees.Identifier;
+import Triangle.SyntacticAnalyzer.SourcePosition;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -608,6 +610,19 @@ public class Main extends javax.swing.JFrame {
                     //disassembler.Disassemble(desktopPane.getSelectedFrame().getTitle().replace(".tri", ".tam"));
                     ((FileFrame)desktopPane.getSelectedFrame()).setTree((DefaultMutableTreeNode)treeVisitor.visitProgram(compiler.getAST(), null));
                     //((FileFrame)desktopPane.getSelectedFrame()).setTable(tableVisitor.getTable(compiler.getAST()));
+                    String[] parts = compiler.fullName.split("\\.");
+                    String ruta = parts[0] + ".xml";
+                    String contenido = treeVisitor.XML;
+                    File file = new File(ruta);
+                    if (!file.exists()) {
+                        file.createNewFile();
+                    }
+                    FileWriter fw = new FileWriter(file);
+                    BufferedWriter bw = new BufferedWriter(fw);
+                    bw.write(contenido);
+                    bw.close();
+                    
+                    
                     
                     runMenuItem.setEnabled(false);
                     buttonRun.setEnabled(false);

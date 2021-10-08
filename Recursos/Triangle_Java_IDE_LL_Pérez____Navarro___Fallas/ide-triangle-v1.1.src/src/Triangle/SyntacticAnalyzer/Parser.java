@@ -198,7 +198,8 @@ public class Parser {
         switch (currentToken.kind) {
 
             case Token.SKIP: {
-                finish(commandPos);
+                acceptIt();
+//                finish(commandPos);
                 commandAST = new EmptyCommand(commandPos);
             }
             break;
@@ -303,9 +304,11 @@ public class Parser {
                     break;
                     case Token.FOR: {
                         accept(Token.FOR);
-                        Identifier iAST = parseIdentifier();
-                        if (currentToken.kind == Token.BECOMES) {
-                            accept(Token.BECOMES);
+                        Identifier iAST = parseIdentifier();  // repeat for i := range 5 .. 6 while i < 5 do skip end
+                        if (currentToken.kind == Token.BECOMES) { // repeat for i := range 5 .. 6 do skip end
+//                            accept(Token.BECOMES);
+//                            accept(Token.RANGE);
+                            acceptIt();
                             accept(Token.RANGE);
                             Expression eAST = parseExpression();
                             accept(Token.DDOT);
@@ -357,7 +360,11 @@ public class Parser {
                             accept(Token.END);
                             finish(commandPos);
                             commandAST = new RepeatIn(ivdAST, cAST, commandPos);
-                        } else {
+                        }
+                        else if (currentToken.kind == Token.EOT){ // cuando llega al final de la linea, finaliza
+                            finish(commandPos);
+                        }
+                        else {
 
                             syntacticError("\"%\" cannot start a command For", currentToken.spelling);
 
@@ -425,7 +432,7 @@ public class Parser {
             }
             break;
             default:
-                syntacticError("\"%\" cannot start a command IF", currentToken.spelling);
+                syntacticError("\"%\" cannot start a command IF, else missing", currentToken.spelling);
                 break;
         }
 
@@ -657,12 +664,12 @@ public class Parser {
 
         SourcePosition declarationPos = new SourcePosition();
         start(declarationPos);
-        //declarationAST = parseDingleDeclarion();  se quita esta línea de acuerdo a los solicitado
-        declarationAST = parseCompoundDeclaration(); //Se agrega nuevo requerimiento 
+        //declarationAST = parseDingleDeclarion();  se quita esta l?nea de acuerdo a los solicitado
+        declarationAST = parseCompoundDeclaration(); //Se agrega nuevo requerimiento
         while (currentToken.kind == Token.SEMICOLON) {
             acceptIt();
             //Declaration d2AST = parseSingleDeclaration(); se quita linea de acuerdo a los solicitado
-            Declaration d2AST = parseCompoundDeclaration(); //Se agrega nuevo requerimiento 
+            Declaration d2AST = parseCompoundDeclaration(); //Se agrega nuevo requerimiento
             finish(declarationPos);
             declarationAST = new SequentialDeclaration(declarationAST, d2AST,
                     declarationPos);
@@ -947,7 +954,7 @@ public class Parser {
 //                finish(formalPos);
 //                formalAST = new ProcFormalParameter(iAST, fpsAST, formalPos);
 //            }
-            //Se añadió regla Proc-Func, pag 3
+            //Se a?adi? regla Proc-Func, pag 3
             case Token.PROC: {
                 acceptIt();
                 Identifier iAST = parseIdentifier();
