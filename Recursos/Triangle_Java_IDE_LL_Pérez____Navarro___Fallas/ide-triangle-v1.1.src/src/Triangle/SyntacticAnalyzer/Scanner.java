@@ -132,7 +132,7 @@ public final class Scanner {
     case 'Z':
       takeIt();
       while (isLetter(currentChar) || isDigit(currentChar))
-        takeIt(); //agregar el html para letras o digitos para el identificador
+        takeIt(); 
       return Token.IDENTIFIER;
 
     case '0':  case '1':  case '2':  case '3':  case '4':
@@ -223,6 +223,17 @@ public final class Scanner {
       takeIt();
       return Token.ERROR;
     }
+  }
+    
+  //método generado para crear el HTML en caso de error sintáctico
+  public boolean scanAll(){
+      Token tok;
+      tok = scan();
+      while(tok.kind != Token.EOT && tok.kind != Token.ERROR && tok.spelling!=null && tok.spelling!=""){
+          tok = scan();
+      }
+      
+      return true;
   }
 
   public Token scan () {

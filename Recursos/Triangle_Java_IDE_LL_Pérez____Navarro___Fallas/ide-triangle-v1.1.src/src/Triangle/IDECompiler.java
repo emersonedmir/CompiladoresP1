@@ -17,6 +17,8 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import jdk.nashorn.internal.parser.Token;
+
 
 
 
@@ -95,17 +97,40 @@ public class IDECompiler {
                 BufferedWriter bw = new BufferedWriter(fw);
                 bw.write(contenido);
                 bw.close();
-        System.out.println("Compilation was successful.");
+            System.out.println("Compilation was successful.");
         }
             
-        else
-            System.out.println("Compilation was unsuccessful.");
+        else{
+            
+            //código agregado para generar el html en caso de error sintactico
+            SourceFile nsource = new SourceFile(sourceName);
+            Scanner nscanner = new Scanner(source);
+            if(nscanner.scanAll()){
+                nscanner.html +="</p>";
+            
+            String[] palabras = sourceName.split("\\.");
+            
         
+            String ruta = palabras[0] + ".html";
+            String contenido = nscanner.html;
+            File file = new File(ruta);
+            if (!file.exists()) {
+                    file.createNewFile();
+                }
+            FileWriter fw = new FileWriter(file);
+                BufferedWriter bw = new BufferedWriter(fw);
+                bw.write(contenido);
+                bw.close();
+            }
+            
+            System.out.println("Compilation was unsuccessful.");
+        }
         
         
         return(success);
     }
       
+   
     /**
      * Returns the line number where the first error is.
      * @return Line number.

@@ -404,7 +404,7 @@ public class TreeVisitor implements Visitor {
      * @return The tree node.
      */
     public DefaultMutableTreeNode createUnary(String caption, AST child1) {
-         XML+="<"+caption+">";
+        XML+="<"+caption+">";
         DefaultMutableTreeNode t = new DefaultMutableTreeNode(caption);
         t.add((DefaultMutableTreeNode)child1.visit(this, null));
         XML+="</"+caption+">";
@@ -443,7 +443,7 @@ public class TreeVisitor implements Visitor {
      * @return The tree node.
      */
     public DefaultMutableTreeNode createTernary(String caption, AST child1, AST child2, AST child3) {
-         XML+="<"+caption+">";
+        XML+="<"+caption+">";
         DefaultMutableTreeNode t = new DefaultMutableTreeNode(caption);
         t.add((DefaultMutableTreeNode)child1.visit(this, null));
         t.add((DefaultMutableTreeNode)child2.visit(this, null));

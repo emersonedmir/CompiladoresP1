@@ -78,6 +78,7 @@ public class Parser {
 
         previousTokenPosition.start = 0;
         previousTokenPosition.finish = 0;
+   //     lexicalAnalyser.scanAll();
         currentToken = lexicalAnalyser.scan();
 
         try {
@@ -304,8 +305,8 @@ public class Parser {
                     break;
                     case Token.FOR: {
                         accept(Token.FOR);
-                        Identifier iAST = parseIdentifier();  // repeat for i := range 5 .. 6 while i < 5 do skip end
-                        if (currentToken.kind == Token.BECOMES) { // repeat for i := range 5 .. 6 do skip end
+                        Identifier iAST = parseIdentifier();  
+                        if (currentToken.kind == Token.BECOMES) { 
 //                            accept(Token.BECOMES);
 //                            accept(Token.RANGE);
                             acceptIt();
@@ -345,7 +346,7 @@ public class Parser {
                                 }
                                 break;
                                 default:
-                                    syntacticError("\"%\" cannot start a command FOR", currentToken.spelling);
+                                    syntacticError("\"%\" cannot start a command FOR, Error near ..", currentToken.spelling);
                                     break;
                             }
                         }
@@ -406,6 +407,7 @@ public class Parser {
         return commandAST;
     }
 
+    // se genera nuevo metodo para llamado recursivo en el if
     Command parseRestOfIf() throws SyntaxError {
         Command RestOfIfAST = null;
 
@@ -631,10 +633,12 @@ public class Parser {
         return vnameAST;
     }
 
+    //Se modifica metodo para iniciar vAST en null
     Vname parseRestOfVname(Identifier identifierAST) throws SyntaxError {
         SourcePosition vnamePos = new SourcePosition();
         vnamePos = identifierAST.position;
-        Vname vAST = new SimpleVname(identifierAST, vnamePos);
+        Vname vAST=null;
+        vAST = new SimpleVname(identifierAST, vnamePos);
 
         while (currentToken.kind == Token.DOT
                 || currentToken.kind == Token.LBRACKET) {
