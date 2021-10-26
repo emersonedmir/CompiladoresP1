@@ -25,7 +25,7 @@ public final class Scanner {
   private char currentChar;
   private StringBuffer currentSpelling;
   private boolean currentlyScanningToken;
-  public static String html = "<p style=\"font-family: 'DejaVu Sans', monospace;\">"; //inicio del formato HTML
+  public String html = "<p style=\"font-family: 'DejaVu Sans', monospace;\">"; //inicio del formato HTML
   
   /*Modificacion creamos lista para almacenar los tokens en un lista para su impresion HTML*/
   public ArrayList<Token> lstTokens = new ArrayList<Token>();
@@ -229,11 +229,18 @@ public final class Scanner {
   public boolean scanAll(){
       Token tok;
       tok = scan();
-      while(tok.kind != Token.EOT && tok.kind != Token.ERROR && tok.spelling!=null && tok.spelling!=""){
-          tok = scan();
+      if(tok.kind==Token.ERROR){
+          return false;
       }
       
+      while(tok.kind != Token.EOT && tok.kind != Token.ERROR){
+          tok = scan();
+      }
+      if(tok.kind==Token.ERROR){
+          return false;
+      }
       return true;
+      
   }
 
   public Token scan () {

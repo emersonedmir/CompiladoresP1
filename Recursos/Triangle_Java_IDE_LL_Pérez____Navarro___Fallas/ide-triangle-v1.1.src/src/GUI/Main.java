@@ -610,6 +610,8 @@ public class Main extends javax.swing.JFrame {
                     //disassembler.Disassemble(desktopPane.getSelectedFrame().getTitle().replace(".tri", ".tam"));
                     ((FileFrame)desktopPane.getSelectedFrame()).setTree((DefaultMutableTreeNode)treeVisitor.visitProgram(compiler.getAST(), null));
                     //((FileFrame)desktopPane.getSelectedFrame()).setTable(tableVisitor.getTable(compiler.getAST()));
+                    
+                    //código para generar archivo xml y guardarlo en disco
                     String[] parts = compiler.fullName.split("\\.");
                     String ruta = parts[0] + ".xml";
                     String contenido = treeVisitor.XML;
@@ -621,7 +623,7 @@ public class Main extends javax.swing.JFrame {
                     BufferedWriter bw = new BufferedWriter(fw);
                     bw.write(contenido);
                     bw.close();
-                    
+                    //fin cambios
                     
                     
                     runMenuItem.setEnabled(false);

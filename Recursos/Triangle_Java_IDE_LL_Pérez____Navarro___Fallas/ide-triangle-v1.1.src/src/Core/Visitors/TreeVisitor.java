@@ -17,6 +17,7 @@ import Triangle.AbstractSyntaxTrees.CallExpression;
 import Triangle.AbstractSyntaxTrees.CharTypeDenoter;
 import Triangle.AbstractSyntaxTrees.CharacterExpression;
 import Triangle.AbstractSyntaxTrees.CharacterLiteral;
+import Triangle.AbstractSyntaxTrees.Command;
 import Triangle.AbstractSyntaxTrees.ConstActualParameter;
 import Triangle.AbstractSyntaxTrees.ConstDeclaration;
 import Triangle.AbstractSyntaxTrees.ConstFormalParameter;
@@ -27,6 +28,7 @@ import Triangle.AbstractSyntaxTrees.EmptyCommand;
 import Triangle.AbstractSyntaxTrees.EmptyExpression;
 import Triangle.AbstractSyntaxTrees.EmptyFormalParameterSequence;
 import Triangle.AbstractSyntaxTrees.ErrorTypeDenoter;
+import Triangle.AbstractSyntaxTrees.Expression;
 
 import Triangle.AbstractSyntaxTrees.FuncActualParameter;
 import Triangle.AbstractSyntaxTrees.FuncDeclaration;
@@ -81,6 +83,7 @@ import Triangle.AbstractSyntaxTrees.VarFormalParameter;
 import Triangle.AbstractSyntaxTrees.Visitor;
 import Triangle.AbstractSyntaxTrees.VnameExpression;
 import Triangle.AbstractSyntaxTrees.WhileCommand;
+import Triangle.AbstractSyntaxTrees.repeatDoUntil;
 import javax.swing.tree.DefaultMutableTreeNode;
 
 /**
@@ -98,7 +101,7 @@ public class TreeVisitor implements Visitor {
      */
     public TreeVisitor() {
     }
-    public String XML="";
+    public String XML=""; //variable necesaria para formar el xml
     // <editor-fold defaultstate="collapsed" desc=" Commands ">    
     // Commands  
     public Object visitAssignCommand(AssignCommand ast, Object o) {
@@ -110,7 +113,7 @@ public class TreeVisitor implements Visitor {
     }
     
     public Object visitEmptyCommand(EmptyCommand ast, Object o) {
-        XML+="<EmptyCommand value = \"skip\">";
+        XML+="<EmptyCommand value = \"skip\"/>"; //Se concatena valor en etiqueta xml
         return(createNullary("EmptyCommand"));
     }
     
@@ -152,7 +155,7 @@ public class TreeVisitor implements Visitor {
     }
     
     public Object visitEmptyExpression(EmptyExpression ast, Object obj) {
-        XML+="<EmptyExpression value = \"skip\">";
+        XML+="<EmptyExpression value = \"skip\"/>"; //Se concatena valor en etiqueta xml
         return(createNullary("EmptyExpression"));
     }
     
@@ -255,7 +258,7 @@ public class TreeVisitor implements Visitor {
     }
     
     public Object visitEmptyFormalParameterSequence(EmptyFormalParameterSequence ast, Object obj) {
-        XML+="<EmptyFormalParameterSequence value = \"skip\">";
+        XML+="<EmptyFormalParameterSequence value = \"skip\"/>"; //Se concatena valor en etiqueta xml
         return(createNullary("EmptyFormalParameterSequence"));
     }
     
@@ -285,7 +288,7 @@ public class TreeVisitor implements Visitor {
     }
     
     public Object visitEmptyActualParameterSequence(EmptyActualParameterSequence ast, Object obj) {
-        XML+="<EmptyActualParameterSequence value = \"skip\"/>";
+        XML+="<EmptyActualParameterSequence value = \"skip\"/>"; //Se concatena valor en etiqueta xml
         return(createNullary("EmptyActualParameterSequence"));
     }
     
@@ -344,22 +347,22 @@ public class TreeVisitor implements Visitor {
     // <editor-fold defaultstate="collapsed" desc=" Literals, Identifiers and Operators ">
     // Literals, Identifiers and Operators
     public Object visitCharacterLiteral(CharacterLiteral ast, Object obj) {
-        XML+="<CharLiteral value = \""+ ast.spelling +"\"/>";
+        XML+="<CharLiteral value = \""+ ast.spelling +"\"/>"; //Se concatena valor en etiqueta xml
         return(createNullary(ast.spelling));
     }
     
     public Object visitIdentifier(Identifier ast, Object obj) {
-        XML+="<Identifier value = \""+ ast.spelling +"\"/>";
+        XML+="<Identifier value = \""+ ast.spelling +"\"/>";//Se concatena valor en etiqueta xml
         return(createNullary(ast.spelling));
     }
     
     public Object visitIntegerLiteral(IntegerLiteral ast, Object obj) {
-        XML+="<IntegerLiteral value = \""+ ast.spelling +"\"/>";
+        XML+="<IntegerLiteral value = \""+ ast.spelling +"\"/>";//Se concatena valor en etiqueta xml
         return(createNullary(ast.spelling));
     }
     
     public Object visitOperator(Operator ast, Object obj) {
-        XML+="<Operator value = \""+ ast.spelling +"\"/>";
+        XML+="<Operator value = \""+ ast.spelling +"\"/>";//Se concatena valor en etiqueta xml
         return(createNullary(ast.spelling));
     }
     // </editor-fold>
@@ -404,14 +407,13 @@ public class TreeVisitor implements Visitor {
      * @return The tree node.
      */
     public DefaultMutableTreeNode createUnary(String caption, AST child1) {
-        XML+="<"+caption+">";
+        XML+="<"+caption+">";//Se concatena valor de etiquetas de apertura 
         DefaultMutableTreeNode t = new DefaultMutableTreeNode(caption);
         t.add((DefaultMutableTreeNode)child1.visit(this, null));
-        XML+="</"+caption+">";
+        XML+="</"+caption+">";//Se concatena valor de etiquetas de cierre
         return(t);
     }
-    public DefaultMutableTreeNode createUnaryIdentifier(String caption, Identifier child1) {
-         //XML+="<"+caption+" values= \""+ child1.spelling +"\"/>";
+    public DefaultMutableTreeNode createUnaryIdentifier(String caption, Identifier child1) {//Se concatena valor de etiquetas de apertura y cierre
         DefaultMutableTreeNode t = new DefaultMutableTreeNode(caption);
         t.add((DefaultMutableTreeNode)child1.visit(this, null));
         
@@ -426,11 +428,11 @@ public class TreeVisitor implements Visitor {
      * @return The tree node.
      */
     public DefaultMutableTreeNode createBinary(String caption, AST child1, AST child2) {
-        XML+="<"+caption+">";
+        XML+="<"+caption+">";//Se concatena valor de etiquetas de apertura 
         DefaultMutableTreeNode t = new DefaultMutableTreeNode(caption);
         t.add((DefaultMutableTreeNode)child1.visit(this, null));
         t.add((DefaultMutableTreeNode)child2.visit(this, null));
-        XML+="</"+caption+">";
+        XML+="</"+caption+">";//Se concatena valor de etiquetas de cierre
         return(t);
     }
     
@@ -443,12 +445,12 @@ public class TreeVisitor implements Visitor {
      * @return The tree node.
      */
     public DefaultMutableTreeNode createTernary(String caption, AST child1, AST child2, AST child3) {
-        XML+="<"+caption+">";
+        XML+="<"+caption+">"; //Se concatena valor de etiquetas de apertura 
         DefaultMutableTreeNode t = new DefaultMutableTreeNode(caption);
         t.add((DefaultMutableTreeNode)child1.visit(this, null));
         t.add((DefaultMutableTreeNode)child2.visit(this, null));
         t.add((DefaultMutableTreeNode)child3.visit(this, null));
-        XML+="</"+caption+">";
+        XML+="</"+caption+">";//Se concatena valor de etiquetas de cierre
         return(t);        
     }
     
@@ -462,13 +464,13 @@ public class TreeVisitor implements Visitor {
      * @return The tree node.
      */
     public DefaultMutableTreeNode createQuaternary(String caption, AST child1, AST child2, AST child3, AST child4) {
-        XML+="</"+caption+">";
+        XML+="<"+caption+">";//Se concatena valor de etiquetas de apertura 
         DefaultMutableTreeNode t = new DefaultMutableTreeNode(caption);
         t.add((DefaultMutableTreeNode)child1.visit(this, null));
         t.add((DefaultMutableTreeNode)child2.visit(this, null));
         t.add((DefaultMutableTreeNode)child3.visit(this, null));
         t.add((DefaultMutableTreeNode)child4.visit(this, null));
-        XML+="</"+caption+">";
+        XML+="</"+caption+">";//Se concatena valor de etiquetas de cierre
         return(t);             
     }
     // </editor-fold>
@@ -534,8 +536,15 @@ public class TreeVisitor implements Visitor {
 
     @Override
     public Object visitVarExpression(VarExpression ast, Object o) {
-        return(createBinary("UntilCommand", ast.E, ast.I));
+        return(createBinary("VarExpresion", ast.E, ast.I));
     }
+
+    @Override
+    public Object visitRepeatDoUntil(repeatDoUntil cAst, Object o) {
+        return(createBinary("repeatDoUntil", cAst.C,cAst.E));
+    }
+
+    
 
     
 

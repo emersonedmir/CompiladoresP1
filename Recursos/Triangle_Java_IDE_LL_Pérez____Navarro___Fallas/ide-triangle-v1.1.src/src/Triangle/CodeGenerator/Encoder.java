@@ -101,6 +101,7 @@ import Triangle.AbstractSyntaxTrees.Visitor;
 import Triangle.AbstractSyntaxTrees.Vname;
 import Triangle.AbstractSyntaxTrees.VnameExpression;
 import Triangle.AbstractSyntaxTrees.WhileCommand;
+import Triangle.AbstractSyntaxTrees.repeatDoUntil;
 
 public final class Encoder implements Visitor {
 
@@ -1067,6 +1068,11 @@ public final class Encoder implements Visitor {
 
     @Override
     public Object visitVarExpression(VarExpression ast, Object o) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitRepeatDoUntil(repeatDoUntil cAst, Object o) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

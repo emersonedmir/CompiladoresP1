@@ -293,7 +293,7 @@ public class Parser {
                                 Expression eAST = parseExpression();
                                 accept(Token.END);
                                 finish(commandPos);
-                                commandAST = new UntilCommand(eAST, cAST, commandPos);
+                                commandAST = new repeatDoUntil(cAST,eAST, commandPos);
                             }
                             break;
                             default:
@@ -307,8 +307,8 @@ public class Parser {
                         accept(Token.FOR);
                         Identifier iAST = parseIdentifier();  
                         if (currentToken.kind == Token.BECOMES) { 
-//                            accept(Token.BECOMES);
-//                            accept(Token.RANGE);
+//                          accept(Token.BECOMES);
+//                          accept(Token.RANGE);
                             acceptIt();
                             accept(Token.RANGE);
                             Expression eAST = parseExpression();

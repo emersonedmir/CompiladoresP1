@@ -106,7 +106,7 @@ public final class Token extends Object {
     HLINE               = 38,   //  |
 
     // brackets...
-    LPAREN		= 39,   // (
+    LPAREN		= 39,   //  (
     RPAREN		= 40,   //  )
     LBRACKET            = 41,   //  [
     RBRACKET            = 42,   //  ]

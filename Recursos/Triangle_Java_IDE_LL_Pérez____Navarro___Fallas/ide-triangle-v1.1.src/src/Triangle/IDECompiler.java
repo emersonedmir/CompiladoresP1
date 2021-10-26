@@ -82,6 +82,8 @@ public class IDECompiler {
         }
 
         if (success){
+            
+            //codigo agreagado para generar y guardar archivo xml en caso de que success sea true
             scanner.html +="</p>";
             
             String[] palabras = sourceName.split("\\.");
@@ -97,14 +99,18 @@ public class IDECompiler {
                 BufferedWriter bw = new BufferedWriter(fw);
                 bw.write(contenido);
                 bw.close();
+             //fin codigo
+                
             System.out.println("Compilation was successful.");
         }
             
         else{
             
             //código agregado para generar el html en caso de error sintactico
+            
             SourceFile nsource = new SourceFile(sourceName);
-            Scanner nscanner = new Scanner(source);
+            Scanner nscanner = new Scanner(nsource);
+            nscanner.html +="";
             if(nscanner.scanAll()){
                 nscanner.html +="</p>";
             
@@ -121,6 +127,7 @@ public class IDECompiler {
                 BufferedWriter bw = new BufferedWriter(fw);
                 bw.write(contenido);
                 bw.close();
+             //fin codigo
             }
             
             System.out.println("Compilation was unsuccessful.");

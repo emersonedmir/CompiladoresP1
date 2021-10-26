@@ -97,6 +97,7 @@ import Triangle.AbstractSyntaxTrees.VarFormalParameter;
 import Triangle.AbstractSyntaxTrees.Visitor;
 import Triangle.AbstractSyntaxTrees.VnameExpression;
 import Triangle.AbstractSyntaxTrees.WhileCommand;
+import Triangle.AbstractSyntaxTrees.repeatDoUntil;
 import Triangle.SyntacticAnalyzer.SourcePosition;
 
 public final class Checker implements Visitor {
@@ -159,6 +160,7 @@ public final class Checker implements Visitor {
   }
 
   public Object visitWhileCommand(WhileCommand ast, Object o) {
+      //repeat while Exp do Com end
     TypeDenoter eType = (TypeDenoter) ast.E.visit(this, null);
     if (! eType.equals(StdEnvironment.booleanType))
       reporter.reportError("Boolean expression expected here", "", ast.E.position);
@@ -230,11 +232,13 @@ public final class Checker implements Visitor {
     return ast.type;
   }
 
+  @Override
   public Object visitEmptyExpression(EmptyExpression ast, Object o) {
     ast.type = null;
     return ast.type;
   }
 
+  @Override
   public Object visitIfExpression(IfExpression ast, Object o) {
     TypeDenoter e1Type = (TypeDenoter) ast.E1.visit(this, null);
     if (! e1Type.equals(StdEnvironment.booleanType))
@@ -909,6 +913,11 @@ public final class Checker implements Visitor {
     StdEnvironment.charType = new CharTypeDenoter(dummyPos);
     StdEnvironment.anyType = new AnyTypeDenoter(dummyPos);
     StdEnvironment.errorType = new ErrorTypeDenoter(dummyPos);
+    
+    /*Inicio seccion de nuevo simbolos*/
+    
+    
+    /*Fin seccion de nuevo simbolos*/
 
     StdEnvironment.booleanDecl = declareStdType("Boolean", StdEnvironment.booleanType);
     StdEnvironment.falseDecl = declareStdConst("false", StdEnvironment.booleanType);
@@ -953,7 +962,20 @@ public final class Checker implements Visitor {
 
     @Override
     public Object visitDoCommand(DoCommand ast, Object o) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        //repeat-Do-While
+        //"repeat" "do" Command "while" Expression "end"
+        //Referencia 288 del parser
+        
+        /*Reglas*/
+        //Exp debe ser de tipo Boolean
+        //Com y sus partes deben satisfacer las restricciones contextuales
+        ast.C.visit(this, null);
+        
+        TypeDenoter eType = (TypeDenoter) ast.E.visit(this, null);
+        
+        if (! eType.equals(StdEnvironment.booleanType))
+            reporter.reportError("Boolean expression expected here", "", ast.E.position);
+        return null;
     }
 
     @Override
@@ -968,7 +990,20 @@ public final class Checker implements Visitor {
 
     @Override
     public Object visitUntilCommand(UntilCommand ast, Object o) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        //repeat until Exp do Com end
+        //"repeat" "until" Expression "do" Command "end"
+        /*Reglas*/
+        //Exp debe ser de tipo Boolean
+        //Com y sus partes deben satisfacer las restricciones contextuales
+        TypeDenoter eType = (TypeDenoter) ast.E.visit(this, null);
+        
+        if (! eType.equals(StdEnvironment.booleanType))
+            reporter.reportError("Boolean expression expected here", "", ast.E.position);
+        
+        ast.C.visit(this, null);
+        
+        
+        return null;
     }
 
     @Override
@@ -978,7 +1013,47 @@ public final class Checker implements Visitor {
 
     @Override
     public Object visitRepeatForRange(RepeatForRange ast, Object o) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        //repeat for Id := range Exp1 .. Exp2 do Com end
+        /*reglas*/
+        //Exp1 y Exp2 deben ser de tipo entero
+        //id es de tio entero
+        //no puede pasarse como var
+        
+        //paso 1
+        TypeDenoter e1Type = (TypeDenoter) ast.D.E.visit(this, null); 
+        
+        //paso 2
+        TypeDenoter e2Type = (TypeDenoter) ast.E.visit(this, null);
+        
+        //paso 3
+        if (! e1Type.equals(StdEnvironment.integerType)){//3
+            reporter.reportError ("Integer expression expected here", "",ast.D.E.position);
+        }
+        //paso 4
+        if (! e2Type.equals(StdEnvironment.integerType)){//4
+            reporter.reportError ("Integer expression expected here", "",ast.E.position);
+        }
+        //paso 5
+        idTable.openScope();
+        
+        //paso5.5, consultar con el profe en que momento se le asigan el tipo a Identifier
+        if(!(ast.D.I.type == StdEnvironment.integerType)){
+            reporter.reportError ("Integer expression expected here", "",ast.D.I.position);
+        }
+        
+        //paso 6
+        idTable.enter (ast.D.I.spelling, ast.D); 
+        if (ast.D.duplicated){
+            reporter.reportError ("identifier \"%\" already declared", ast.D.I.spelling, ast.position);
+        }
+        
+        //paso 7
+        ast.C.visit(this, null);
+        
+        //paso 8
+        idTable.closeScope();
+        
+        return null;
     }
 
     
@@ -1001,7 +1076,23 @@ public final class Checker implements Visitor {
 
     @Override
     public Object visitRepeatIn(RepeatIn ast, Object o) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        
+        //paso 1, consultar con el profesor est paso; regla: Exp debe ser de tipo array InL of TD.
+        AnyTypeDenoter eAnyType = (AnyTypeDenoter) ast.IVD.E.visit(this, null);
+        
+         //paso 2       
+        idTable.openScope();
+        
+        //paso 3
+        idTable.enter(ast.IVD.I.spelling, ast.IVD);
+        
+        //paso 4
+        ast.C.visit(this, null);
+        
+        //paso 5
+        idTable.closeScope();
+        
+        return null;
     }
 
     @Override
@@ -1012,5 +1103,24 @@ public final class Checker implements Visitor {
     @Override
     public Object visitVarExpression(VarExpression ast, Object o) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitRepeatDoUntil(repeatDoUntil ast, Object o) {
+        //repeat do Com until Exp end
+        /*Reglas*/
+        //Exp debe ser de tipo Boolean
+        //Com y sus partes deben satisfacer las restricciones contextuales
+        //referencia parser 296
+        
+        //consultar con el profe si exp ve Com, si es así preguntar como se implementa
+        ast.C.visit(this, null);
+        
+        TypeDenoter eType = (TypeDenoter) ast.E.visit(this, null);
+        
+        if (! eType.equals(StdEnvironment.booleanType))
+            reporter.reportError("Boolean expression expected here", "", ast.E.position);
+
+        return null;
     }
 }

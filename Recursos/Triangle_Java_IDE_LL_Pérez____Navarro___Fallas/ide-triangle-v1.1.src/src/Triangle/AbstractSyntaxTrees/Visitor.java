@@ -14,6 +14,8 @@
 
 package Triangle.AbstractSyntaxTrees;
 
+import Triangle.SyntacticAnalyzer.SourcePosition;
+
 public interface Visitor {
 
   // Commands
@@ -36,6 +38,7 @@ public interface Visitor {
   public abstract Object visitRepeatIn(RepeatIn ast, Object o); //Nuevo metodo visit para RepeatIn
   public abstract Object visitLocalDeclaration(LocalDeclaration ast, Object o); //Nuevo metodo visit para LocalDeclaration
   public abstract Object visitVarExpression(VarExpression ast,Object o); //Nuevo método visit para VarExpression
+  public abstract Object visitRepeatDoUntil(repeatDoUntil cAst, Object o);
   // Expressions
   public abstract Object visitArrayExpression(ArrayExpression ast, Object o);
   public abstract Object visitBinaryExpression(BinaryExpression ast, Object o);

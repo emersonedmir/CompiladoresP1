@@ -92,6 +92,7 @@ import Triangle.AbstractSyntaxTrees.VarFormalParameter;
 import Triangle.AbstractSyntaxTrees.Visitor;
 import Triangle.AbstractSyntaxTrees.VnameExpression;
 import Triangle.AbstractSyntaxTrees.WhileCommand;
+import Triangle.AbstractSyntaxTrees.repeatDoUntil;
 
 public class LayoutVisitor implements Visitor {
 
@@ -619,6 +620,11 @@ public class LayoutVisitor implements Visitor {
     @Override
     public Object visitVarExpression(VarExpression ast, Object o) {
         return layoutBinary("LocalDeclaration.", ast.E,ast.I);
+    }
+
+    @Override
+    public Object visitRepeatDoUntil(repeatDoUntil cAst, Object o) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
    
