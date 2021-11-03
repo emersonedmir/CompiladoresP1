@@ -32,7 +32,7 @@ import Triangle.AbstractSyntaxTrees.ConstActualParameter;
 import Triangle.AbstractSyntaxTrees.ConstDeclaration;
 import Triangle.AbstractSyntaxTrees.ConstFormalParameter;
 import Triangle.AbstractSyntaxTrees.Declaration;
-import Triangle.AbstractSyntaxTrees.DoCommand;
+import Triangle.AbstractSyntaxTrees.RepeatDoWhile;
 import Triangle.AbstractSyntaxTrees.DotVname;
 import Triangle.AbstractSyntaxTrees.EmptyActualParameterSequence;
 import Triangle.AbstractSyntaxTrees.EmptyCommand;
@@ -73,7 +73,7 @@ import Triangle.AbstractSyntaxTrees.RecursiveDeclaration;
 import Triangle.AbstractSyntaxTrees.RepeatForRange;
 import Triangle.AbstractSyntaxTrees.RepeatForRangeUntil;
 import Triangle.AbstractSyntaxTrees.RepeatForRangeWhile;
-import Triangle.AbstractSyntaxTrees.RepeatIn;
+import Triangle.AbstractSyntaxTrees.RepeatForInDo;
 import Triangle.AbstractSyntaxTrees.SequentialCommand;
 import Triangle.AbstractSyntaxTrees.SequentialDeclaration;
 import Triangle.AbstractSyntaxTrees.SimpleTypeDenoter;
@@ -89,14 +89,14 @@ import Triangle.AbstractSyntaxTrees.TypeDeclaration;
 import Triangle.AbstractSyntaxTrees.TypeDenoter;
 import Triangle.AbstractSyntaxTrees.UnaryExpression;
 import Triangle.AbstractSyntaxTrees.UnaryOperatorDeclaration;
-import Triangle.AbstractSyntaxTrees.UntilCommand;
+import Triangle.AbstractSyntaxTrees.RepeatUntilDo;
 import Triangle.AbstractSyntaxTrees.VarActualParameter;
 import Triangle.AbstractSyntaxTrees.VarDeclaration;
 import Triangle.AbstractSyntaxTrees.VarExpression;
 import Triangle.AbstractSyntaxTrees.VarFormalParameter;
 import Triangle.AbstractSyntaxTrees.Visitor;
 import Triangle.AbstractSyntaxTrees.VnameExpression;
-import Triangle.AbstractSyntaxTrees.WhileCommand;
+import Triangle.AbstractSyntaxTrees.RepeatWhileDo;
 import Triangle.AbstractSyntaxTrees.repeatDoUntil;
 import Triangle.SyntacticAnalyzer.SourcePosition;
 
@@ -159,11 +159,16 @@ public final class Checker implements Visitor {
     return null;
   }
 
-  public Object visitWhileCommand(WhileCommand ast, Object o) {
+  public Object visitRepeatWhileDo(RepeatWhileDo ast, Object o) {
       //repeat while Exp do Com end
+    //Paso 1 Exp de ser de tipo Boolean
     TypeDenoter eType = (TypeDenoter) ast.E.visit(this, null);
+    
+    
     if (! eType.equals(StdEnvironment.booleanType))
       reporter.reportError("Boolean expression expected here", "", ast.E.position);
+    
+    //paso 2 Com y sus partes deben satisfacer las restricciones contextuales
     ast.C.visit(this, null);
     return null;
   }
@@ -724,7 +729,17 @@ public final class Checker implements Visitor {
       } else if (binding instanceof VarDeclaration) {
         ast.type = ((VarDeclaration) binding).T;
         ast.variable = true;
-      } else if (binding instanceof ConstFormalParameter) {
+      } else if (binding instanceof VarExpression) {
+        ast.type = ((VarExpression ) binding).E.type;
+        ast.variable = true;
+      } else if (binding instanceof InVarDecl ) {
+        ast.type = ((ArrayTypeDenoter)(((InVarDecl ) binding).E.type)).T;
+        ast.variable = false;
+      } else if (binding instanceof RangeVarDecl ) {
+        ast.type = ((RangeVarDecl ) binding).E.type;
+        ast.variable = false;
+      } 
+      else if (binding instanceof ConstFormalParameter) {
         ast.type = ((ConstFormalParameter) binding).T;
         ast.variable = false;
       } else if (binding instanceof VarFormalParameter) {
@@ -781,7 +796,7 @@ public final class Checker implements Visitor {
     establishStdEnvironment();
   }
 
-  private IdentificationTable idTable;
+   private IdentificationTable idTable;
   private static SourcePosition dummyPos = new SourcePosition();
   private ErrorReporter reporter;
 
@@ -961,91 +976,85 @@ public final class Checker implements Visitor {
   }
 
     @Override
-    public Object visitDoCommand(DoCommand ast, Object o) {
-        //repeat-Do-While
-        //"repeat" "do" Command "while" Expression "end"
-        //Referencia 288 del parser
+    public Object visitRepeatDoWhile(RepeatDoWhile ast, Object o) {
         
-        /*Reglas*/
-        //Exp debe ser de tipo Boolean
-        //Com y sus partes deben satisfacer las restricciones contextuales
+        //Paso 1 Com y sus partes deben satisfacer las restricciones contextuales
         ast.C.visit(this, null);
         
+        //Paso 2 Exp debe ser de tipo Boolean
         TypeDenoter eType = (TypeDenoter) ast.E.visit(this, null);
         
         if (! eType.equals(StdEnvironment.booleanType))
             reporter.reportError("Boolean expression expected here", "", ast.E.position);
+        
         return null;
     }
 
     @Override
     public Object visitProcFuncs(ProcFuncs ast, Object o) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        //consultar profe
+        TypeDenoter e1Type = (TypeDenoter) ast.pf2AST.visit(this, null);
+        
+               
+        
+        return null;
     }
 
     @Override
     public Object visitRecursiveDeclaration(RecursiveDeclaration ast, Object o) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        //consultar con el profe
+        ast.D.visit(this, null);
+        return null;
     }
 
     @Override
-    public Object visitUntilCommand(UntilCommand ast, Object o) {
-        //repeat until Exp do Com end
-        //"repeat" "until" Expression "do" Command "end"
-        /*Reglas*/
-        //Exp debe ser de tipo Boolean
-        //Com y sus partes deben satisfacer las restricciones contextuales
+    public Object visitRepeatUntilDo(RepeatUntilDo ast, Object o) {
+        
+        //Paso 1 Exp debe ser tipo Boolean
         TypeDenoter eType = (TypeDenoter) ast.E.visit(this, null);
         
         if (! eType.equals(StdEnvironment.booleanType))
             reporter.reportError("Boolean expression expected here", "", ast.E.position);
         
+        //Paso 2 Com y sus partes deben satisfacer las restricciones contextuales
         ast.C.visit(this, null);
-        
         
         return null;
     }
 
     @Override
     public Object visitRangeVarDecl(RangeVarDecl ast, Object o) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        
+        TypeDenoter e1Type = (TypeDenoter) ast.E.visit(this, null);
+        
+        //paso 4
+        if (! e1Type.equals(StdEnvironment.integerType)){
+            reporter.reportError ("Integer expression expected here", "",ast.E.position);
+        }
+        
+        idTable.enter(ast.I.spelling, ast);
+        if (ast.duplicated)
+                    reporter.reportError ("identifier \"%\" already declared",ast.I.spelling, ast.position);
+        
+        return null;
     }
 
     @Override
     public Object visitRepeatForRange(RepeatForRange ast, Object o) {
-        //repeat for Id := range Exp1 .. Exp2 do Com end
-        /*reglas*/
-        //Exp1 y Exp2 deben ser de tipo entero
-        //id es de tio entero
-        //no puede pasarse como var
-        
-        //paso 1
-        TypeDenoter e1Type = (TypeDenoter) ast.D.E.visit(this, null); 
-        
-        //paso 2
+
+        //paso 2 Exp1 y Exp2 deben ser ambas de tipo entero. Los tipos de Exp1 y Exp2 deben ser determinados en el
+        //contexto en el que aparece este comando repeat_for_range_do_end.
         TypeDenoter e2Type = (TypeDenoter) ast.E.visit(this, null);
         
-        //paso 3
-        if (! e1Type.equals(StdEnvironment.integerType)){//3
-            reporter.reportError ("Integer expression expected here", "",ast.D.E.position);
-        }
         //paso 4
-        if (! e2Type.equals(StdEnvironment.integerType)){//4
+        if (! e2Type.equals(StdEnvironment.integerType)){
             reporter.reportError ("Integer expression expected here", "",ast.E.position);
         }
+        
         //paso 5
         idTable.openScope();
         
-        //paso5.5, consultar con el profe en que momento se le asigan el tipo a Identifier
-        if(!(ast.D.I.type == StdEnvironment.integerType)){
-            reporter.reportError ("Integer expression expected here", "",ast.D.I.position);
-        }
-        
-        //paso 6
-        idTable.enter (ast.D.I.spelling, ast.D); 
-        if (ast.D.duplicated){
-            reporter.reportError ("identifier \"%\" already declared", ast.D.I.spelling, ast.position);
-        }
+        ast.D.visit(this, null);
         
         //paso 7
         ast.C.visit(this, null);
@@ -1061,61 +1070,164 @@ public final class Checker implements Visitor {
 
     @Override
     public Object visitRepeatForRangeWhile(RepeatForRangeWhile ast, Object o) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public Object visitRepeatForRangeUntil(RepeatForRangeUntil ast, Object o) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public Object visitInVarDecl(InVarDecl ast, Object o) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public Object visitRepeatIn(RepeatIn ast, Object o) {
         
-        //paso 1, consultar con el profesor est paso; regla: Exp debe ser de tipo array InL of TD.
-        AnyTypeDenoter eAnyType = (AnyTypeDenoter) ast.IVD.E.visit(this, null);
+        TypeDenoter eType = (TypeDenoter) ast.E1.visit(this, null);//Exp2
+        if (! eType.equals(StdEnvironment.integerType)){
+            reporter.reportError ("Integer expression expected here", "",ast.E2.position);
+        }
         
-         //paso 2       
+       
+        
+        TypeDenoter e2Type = (TypeDenoter) ast.E2.visit(this, null);//exp3
+        
+        if (! e2Type.equals(StdEnvironment.booleanType)){
+            reporter.reportError ("Boolean expression expected here", "",ast.E2.position);
+        }
+        
+        //Paso 2
         idTable.openScope();
         
-        //paso 3
-        idTable.enter(ast.IVD.I.spelling, ast.IVD);
         
-        //paso 4
+        ast.D.visit(this, null);
+        
+        //visitamos comando
         ast.C.visit(this, null);
         
-        //paso 5
         idTable.closeScope();
         
         return null;
     }
 
     @Override
+    public Object visitRepeatForRangeUntil(RepeatForRangeUntil ast, Object o) {
+        
+        TypeDenoter eType = (TypeDenoter) ast.E1.visit(this, null);//Exp2
+        if (! eType.equals(StdEnvironment.integerType)){
+            reporter.reportError ("Integer expression expected here", "",ast.E2.position);
+        }
+        
+       
+        
+        TypeDenoter e2Type = (TypeDenoter) ast.E2.visit(this, null);//exp3
+        
+        if (! e2Type.equals(StdEnvironment.booleanType)){
+            reporter.reportError ("Boolean expression expected here", "",ast.E2.position);
+        }
+        
+        
+        
+        idTable.openScope();
+        //consultar con el profe si exp3 puede ver a id
+        ast.D.visit(this, null);
+        
+        ast.C.visit(this, null);
+        
+        idTable.closeScope();
+        
+        return null;
+        
+    }
+
+    @Override
+    public Object visitInVarDecl(InVarDecl ast, Object o) {
+        TypeDenoter eType = (TypeDenoter) ast.E.visit(this, null);
+        
+        if(!((eType) instanceof ArrayTypeDenoter)){
+            reporter.reportError ("array expected here", "", ast.E.position);
+        }
+        
+        ArrayTypeDenoter aTypeD = (ArrayTypeDenoter) eType;
+        
+        if(!(aTypeD.T).equals(StdEnvironment.integerType)){
+            reporter.reportError ("Array of type Integer expected here", "",aTypeD.position);
+        }
+        
+        idTable.enter(ast.I.spelling, ast);
+        
+        return null;
+    }
+
+    @Override
+    public Object visitRepeatForInDo(RepeatForInDo ast, Object o) {
+        
+        idTable.openScope();
+        
+        ast.IVD.visit(this, null);
+           
+        
+        ast.C.visit(this, null);
+        idTable.closeScope();
+        return null;
+ 
+    }
+
+    @Override
     public Object visitLocalDeclaration(LocalDeclaration ast, Object o) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        
+        //hay que implementar un openPublic y un openPrivate
+        
+
+        //Antes de visitar D1
+        //Recordar valor de latest alfa
+        IdEntry latest;
+        
+        
+        
+        latest = idTable.getLatest();
+        int pLevel = latest.level;
+                
+                
+        idTable.openScope();
+        ast.D1.visit(this, null);
+
+        //antes de visitar D2
+        //Recordar valor de latest beta
+        IdEntry d2Latest = idTable.getLatest();
+        ast.D2.visit(this, null);
+        
+        IdEntry d3Latest = idTable.getLatest();
+        
+        while(!(d3Latest.previous.equals(d2Latest))){
+        
+            d3Latest.level = pLevel;
+            d3Latest = d3Latest.previous;
+        }
+        d3Latest.level = latest.level;
+        d3Latest.previous = latest;
+        
+        idTable.closeScope();
+
+        
+        //Despues de visitar D2
+        //limpiar parte de D1
+        //reconectar primero de D2 con ultimo TiD 
+
+
+        return null;
     }
 
     @Override
     public Object visitVarExpression(VarExpression ast, Object o) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        TypeDenoter eType = (TypeDenoter) ast.E.visit(this, null);
+        ast.T = eType;
+        
+        idTable.enter(ast.I.spelling,ast);
+        
+        if(ast.duplicated){
+            reporter.reportError ("identifier \"%\" already declared",
+                            ast.I.spelling, ast.position);
+        }
+        
+        return null;
     }
 
     @Override
     public Object visitRepeatDoUntil(repeatDoUntil ast, Object o) {
-        //repeat do Com until Exp end
-        /*Reglas*/
-        //Exp debe ser de tipo Boolean
-        //Com y sus partes deben satisfacer las restricciones contextuales
-        //referencia parser 296
-        
-        //consultar con el profe si exp ve Com, si es así preguntar como se implementa
+
+        //Paso 1 Com y sus partes deben satisfacer las restricciones contextuales
         ast.C.visit(this, null);
         
+        //Paso 2 Exp debe ser de tipo Boolean
         TypeDenoter eType = (TypeDenoter) ast.E.visit(this, null);
         
         if (! eType.equals(StdEnvironment.booleanType))

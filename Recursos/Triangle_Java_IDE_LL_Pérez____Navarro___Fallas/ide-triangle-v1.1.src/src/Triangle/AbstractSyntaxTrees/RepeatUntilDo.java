@@ -6,24 +6,21 @@
 package Triangle.AbstractSyntaxTrees;
 
 import Triangle.SyntacticAnalyzer.SourcePosition;
-
 /**
  *
  * @author TOES
  */
-public class RepeatIn extends Command {
+public class RepeatUntilDo extends Command {
 
-    public RepeatIn(InVarDecl ivdAST,Command cAST,SourcePosition thePosition) {
-        super(thePosition);
-        IVD= ivdAST;
-        C= cAST;
-    }
-
-    @Override
-    public Object visit(Visitor v, Object o) {
-        return v.visitRepeatIn(this, o);
-    }
+    public RepeatUntilDo (Expression eAST, Command cAST, SourcePosition thePosition) {
+    super (thePosition);
+    E = eAST;
+    C = cAST;
+  }
     
-    public InVarDecl IVD;
+    public Object visit(Visitor v, Object o) {
+        return v.visitRepeatUntilDo(this, o);
+    }
+    public Expression E;
     public Command C;
 }

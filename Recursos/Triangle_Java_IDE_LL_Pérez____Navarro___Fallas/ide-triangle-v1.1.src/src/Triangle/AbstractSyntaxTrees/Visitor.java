@@ -25,17 +25,17 @@ public interface Visitor {
   public abstract Object visitIfCommand(IfCommand ast, Object o);
   public abstract Object visitLetCommand(LetCommand ast, Object o);
   public abstract Object visitSequentialCommand(SequentialCommand ast, Object o);
-  public abstract Object visitWhileCommand(WhileCommand ast, Object o);
-  public abstract Object visitDoCommand(DoCommand ast, Object o);
+  public abstract Object visitRepeatWhileDo(RepeatWhileDo ast, Object o);
+  public abstract Object visitRepeatDoWhile(RepeatDoWhile ast, Object o);
   public abstract Object visitProcFuncs(ProcFuncs ast, Object o);
   public abstract Object visitRecursiveDeclaration(RecursiveDeclaration ast, Object o);
-  public abstract Object visitUntilCommand(UntilCommand ast, Object o);
+  public abstract Object visitRepeatUntilDo(RepeatUntilDo ast, Object o);
   public abstract Object visitRangeVarDecl(RangeVarDecl ast, Object o);
   public abstract Object visitRepeatForRange(RepeatForRange ast, Object o);
   public abstract Object visitRepeatForRangeWhile(RepeatForRangeWhile ast, Object o); 
   public abstract Object visitRepeatForRangeUntil(RepeatForRangeUntil ast, Object o);//Nuevo método visit para RepeatForRangeUntil
   public abstract Object visitInVarDecl(InVarDecl ast, Object o);//Nuevo método visit para InVarDecl
-  public abstract Object visitRepeatIn(RepeatIn ast, Object o); //Nuevo metodo visit para RepeatIn
+  public abstract Object visitRepeatForInDo(RepeatForInDo ast, Object o); //Nuevo metodo visit para RepeatIn
   public abstract Object visitLocalDeclaration(LocalDeclaration ast, Object o); //Nuevo metodo visit para LocalDeclaration
   public abstract Object visitVarExpression(VarExpression ast,Object o); //Nuevo método visit para VarExpression
   public abstract Object visitRepeatDoUntil(repeatDoUntil cAst, Object o);

@@ -261,7 +261,7 @@ public class Parser {
                         Command cAST = parseCommand();
                         acceptIt();
                         finish(commandPos);
-                        commandAST = new WhileCommand(eAST, cAST, commandPos);
+                        commandAST = new RepeatWhileDo(eAST, cAST, commandPos);
                     }
                     break;
                     case Token.UNTIL: {
@@ -271,7 +271,7 @@ public class Parser {
                         Command cAST = parseCommand();
                         acceptIt();
                         finish(commandPos);
-                        commandAST = new UntilCommand(eAST, cAST, commandPos);
+                        commandAST = new RepeatUntilDo(eAST, cAST, commandPos);
                     }
                     break;
                     case Token.DO: {
@@ -285,7 +285,7 @@ public class Parser {
                                 Expression eAST = parseExpression();
                                 accept(Token.END);
                                 finish(commandPos);
-                                commandAST = new DoCommand(eAST, cAST, commandPos);
+                                commandAST = new RepeatDoWhile(eAST, cAST, commandPos);
                             }
                             break;
                             case Token.UNTIL: {
@@ -323,6 +323,7 @@ public class Parser {
                                     accept(Token.END);
                                     finish(commandPos);
                                     commandAST = new RepeatForRange(dAST, e1AST, cAST, commandPos);
+                                    // repeatForRangeDo
                                 }
                                 break;
                                 case Token.WHILE: {
@@ -360,7 +361,7 @@ public class Parser {
                             Command cAST = parseCommand();
                             accept(Token.END);
                             finish(commandPos);
-                            commandAST = new RepeatIn(ivdAST, cAST, commandPos);
+                            commandAST = new RepeatForInDo(ivdAST, cAST, commandPos);
                         }
                         else if (currentToken.kind == Token.EOT){ // cuando llega al final de la linea, finaliza
                             finish(commandPos);

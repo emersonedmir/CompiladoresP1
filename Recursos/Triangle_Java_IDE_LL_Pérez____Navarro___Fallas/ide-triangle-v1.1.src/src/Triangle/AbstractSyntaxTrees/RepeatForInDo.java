@@ -11,20 +11,19 @@ import Triangle.SyntacticAnalyzer.SourcePosition;
  *
  * @author TOES
  */
-public class DoCommand extends Command{
+public class RepeatForInDo extends Command {
 
-    public DoCommand (Expression eAST, Command cAST, SourcePosition thePosition) {
-    super (thePosition);
-    E = eAST;
-    C = cAST;
-    
-  }
-    
-    public Object visit(Visitor v, Object o) {
-         return v.visitDoCommand(this, o);
+    public RepeatForInDo(InVarDecl ivdAST,Command cAST,SourcePosition thePosition) {
+        super(thePosition);
+        IVD= ivdAST;
+        C= cAST;
     }
-    public Expression E;
+
+    @Override
+    public Object visit(Visitor v, Object o) {
+        return v.visitRepeatForInDo(this, o);
+    }
+    
+    public InVarDecl IVD;
     public Command C;
-    
-    
 }

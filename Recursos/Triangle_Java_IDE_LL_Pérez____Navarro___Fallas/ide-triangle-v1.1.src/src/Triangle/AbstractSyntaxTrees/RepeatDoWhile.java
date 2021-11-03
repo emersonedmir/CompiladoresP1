@@ -6,21 +6,25 @@
 package Triangle.AbstractSyntaxTrees;
 
 import Triangle.SyntacticAnalyzer.SourcePosition;
+
 /**
  *
  * @author TOES
  */
-public class UntilCommand extends Command {
+public class RepeatDoWhile extends Command{
 
-    public UntilCommand (Expression eAST, Command cAST, SourcePosition thePosition) {
+    public RepeatDoWhile (Expression eAST, Command cAST, SourcePosition thePosition) {
     super (thePosition);
     E = eAST;
     C = cAST;
+    
   }
     
     public Object visit(Visitor v, Object o) {
-        return v.visitUntilCommand(this, o);
+         return v.visitRepeatDoWhile(this, o);
     }
     public Expression E;
     public Command C;
+    
+    
 }

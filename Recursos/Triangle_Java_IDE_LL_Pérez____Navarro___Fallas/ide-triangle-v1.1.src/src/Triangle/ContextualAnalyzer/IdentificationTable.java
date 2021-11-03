@@ -20,11 +20,22 @@ public final class IdentificationTable {
 
   private int level;
   private IdEntry latest;
+  
+
 
   public IdentificationTable () {
     level = 0;
     latest = null;
   }
+  
+  
+  public IdEntry getLatest(){
+      return this.latest;
+  }
+  
+
+  
+
 
   // Opens a new level in the identification table, 1 higher than the
   // current topmost level.
@@ -104,5 +115,7 @@ public final class IdentificationTable {
 
     return attr;
   }
+  
+
 
 }

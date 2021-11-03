@@ -23,6 +23,7 @@ public class VarExpression extends Declaration{
     public Object visit(Visitor v, Object o) {
         return v.visitVarExpression(this, o);
     }
- public Identifier I;
- public Expression E;
+    public Identifier I;
+    public Expression E;
+    public TypeDenoter T;
 }

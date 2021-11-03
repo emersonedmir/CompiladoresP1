@@ -21,7 +21,7 @@ import Triangle.AbstractSyntaxTrees.Command;
 import Triangle.AbstractSyntaxTrees.ConstActualParameter;
 import Triangle.AbstractSyntaxTrees.ConstDeclaration;
 import Triangle.AbstractSyntaxTrees.ConstFormalParameter;
-import Triangle.AbstractSyntaxTrees.DoCommand;
+import Triangle.AbstractSyntaxTrees.RepeatDoWhile;
 import Triangle.AbstractSyntaxTrees.DotVname;
 import Triangle.AbstractSyntaxTrees.EmptyActualParameterSequence;
 import Triangle.AbstractSyntaxTrees.EmptyCommand;
@@ -61,7 +61,7 @@ import Triangle.AbstractSyntaxTrees.RecursiveDeclaration;
 import Triangle.AbstractSyntaxTrees.RepeatForRange;
 import Triangle.AbstractSyntaxTrees.RepeatForRangeUntil;
 import Triangle.AbstractSyntaxTrees.RepeatForRangeWhile;
-import Triangle.AbstractSyntaxTrees.RepeatIn;
+import Triangle.AbstractSyntaxTrees.RepeatForInDo;
 import Triangle.AbstractSyntaxTrees.SequentialCommand;
 import Triangle.AbstractSyntaxTrees.SequentialDeclaration;
 import Triangle.AbstractSyntaxTrees.SimpleTypeDenoter;
@@ -75,14 +75,14 @@ import Triangle.AbstractSyntaxTrees.SubscriptVname;
 import Triangle.AbstractSyntaxTrees.TypeDeclaration;
 import Triangle.AbstractSyntaxTrees.UnaryExpression;
 import Triangle.AbstractSyntaxTrees.UnaryOperatorDeclaration;
-import Triangle.AbstractSyntaxTrees.UntilCommand;
+import Triangle.AbstractSyntaxTrees.RepeatUntilDo;
 import Triangle.AbstractSyntaxTrees.VarActualParameter;
 import Triangle.AbstractSyntaxTrees.VarDeclaration;
 import Triangle.AbstractSyntaxTrees.VarExpression;
 import Triangle.AbstractSyntaxTrees.VarFormalParameter;
 import Triangle.AbstractSyntaxTrees.Visitor;
 import Triangle.AbstractSyntaxTrees.VnameExpression;
-import Triangle.AbstractSyntaxTrees.WhileCommand;
+import Triangle.AbstractSyntaxTrees.RepeatWhileDo;
 import Triangle.AbstractSyntaxTrees.repeatDoUntil;
 import javax.swing.tree.DefaultMutableTreeNode;
 
@@ -131,7 +131,7 @@ public class TreeVisitor implements Visitor {
         return(createBinary("SequentialCommand", ast.C1, ast.C2));
     }
     
-    public Object visitWhileCommand(WhileCommand ast, Object obj) {
+    public Object visitRepeatWhileDo(RepeatWhileDo ast, Object obj) {
         return(createBinary("WhileCommand", ast.E, ast.C));
     }
     // </editor-fold>
@@ -478,8 +478,8 @@ public class TreeVisitor implements Visitor {
 
 
     @Override
-    public Object visitDoCommand(DoCommand ast, Object o) {
-        return(createBinary("DoCommand", ast.E, ast.C));
+    public Object visitRepeatDoWhile(RepeatDoWhile ast, Object o) {
+        return(createBinary("RepeatDoWhile", ast.E, ast.C));
     }
 
   
@@ -495,8 +495,8 @@ public class TreeVisitor implements Visitor {
     }
 
     @Override
-    public Object visitUntilCommand(UntilCommand ast, Object o) {
-        return(createBinary("UntilCommand", ast.E, ast.C));
+    public Object visitRepeatUntilDo(RepeatUntilDo ast, Object o) {
+        return(createBinary("RepeatUntilDo", ast.E, ast.C));
     }
 
     @Override
@@ -525,8 +525,8 @@ public class TreeVisitor implements Visitor {
     }
 
     @Override
-    public Object visitRepeatIn(RepeatIn ast, Object o) {
-        return(createBinary("RepeatInCommand", ast.IVD, ast.C));
+    public Object visitRepeatForInDo(RepeatForInDo ast, Object o) {
+        return(createBinary("RepeatForInDo", ast.IVD, ast.C));
     }
 
     @Override
